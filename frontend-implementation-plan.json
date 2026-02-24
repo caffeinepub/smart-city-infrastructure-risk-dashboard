@@ -1,377 +1,91 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Smart City Infrastructure Risk Dashboard - Frontend Implementation",
+  "title": "Photo Upload with Auto-Prediction for Infrastructure Records",
   "requirements": [
     {
-      "id": "REQ-6",
-      "summary": "Implement dark-mode government intelligence theme with React + TypeScript layout (nav bar, sidebar, main content area)",
+      "id": "REQ-18",
+      "summary": "Add React Query hook for analyzeAndPredict backend function",
       "acceptanceCriteria": [
-        "App has consistent dark-mode navy/slate theme with teal and amber accents",
-        "Top navigation bar and left filter sidebar are present on all main views",
-        "Typography uses a monospace or technical font for data values",
-        "All cards have subtle glow/border treatment consistent with the theme"
+        "useAnalyzeAndPredict hook is exported from useQueries.ts",
+        "It accepts a full infrastructure input object including optional photoBase64",
+        "It calls the backend analyzeAndPredict endpoint and returns typed results"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add CSS custom properties for dark navy/slate background colors, electric teal (#00D9FF) and amber (#FFB800) accent colors, monospace data typography (Roboto Mono or JetBrains Mono), and utility classes for card glow borders and data-dense layouts consistent with Singapore Smart Nation and Siemens aesthetic"
+          "description": "Add useAnalyzeAndPredict mutation hook that calls the backend analyzeAndPredict function with InfrastructureInput including optional photoBase64 field. The hook should use useMutation from React Query, accept an InfrastructureInput object, and return a PredictionResult containing riskScore, riskLevel, deteriorationRate, maintenanceYear, and budgetEstimate. Include proper error handling and loading states."
+        }
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "summary": "Build Add/Analyze Infrastructure page with photo upload and prediction results",
+      "acceptanceCriteria": [
+        "Route /add is registered in App.tsx and linked from the top nav bar",
+        "Photo upload widget accepts JPEG/PNG, shows thumbnail preview, and converts image to Base64",
+        "Form validates all required fields before enabling Analyze & Predict",
+        "Clicking Analyze & Predict shows a loading state and then populates the prediction results panel",
+        "Prediction results panel shows riskScore badge, riskLevel, healthScore bar, deteriorationRate, maintenanceYear, estimatedCost, and recommendedAction",
+        "Save to Database button persists the full record including photo and predicted values to the backend",
+        "On successful save, user is redirected to the Infrastructure Detail page for the new record",
+        "Page styling matches the dark-mode government intelligence theme (deep navy, teal/amber accents, monospace typography, glow borders)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AddInfrastructure.tsx",
+          "operation": "create",
+          "description": "Create the Add/Analyze Infrastructure page with a comprehensive form including fields for name, structureType, area, age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating, and notes. Include a photo upload widget with drag-and-drop support, file picker (accepting JPEG/PNG up to 5MB), and thumbnail preview that converts uploaded images to Base64. Add an Analyze & Predict button that calls useAnalyzeAndPredict with the form data and photo. Display a Prediction Results panel after analysis showing: risk score with RiskBadge component, risk level text, health score progress bar (100 - riskScore), deterioration rate, forecasted maintenance year, estimated cost (formatted as currency), and recommended action. Include a Save to Database button that calls useAddInfrastructure with the full record including photo and predicted values, then redirects to /infrastructure/:id on success. Style with dark navy background, teal/amber accents, monospace typography for data fields, and glow borders matching the existing theme from frontend/src/index.css."
         },
         {
-          "path": "frontend/tailwind.config.js",
+          "path": "frontend/src/components/PhotoUpload.tsx",
+          "operation": "create",
+          "description": "Create a reusable photo upload component that accepts JPEG/PNG images (max 5MB), provides drag-and-drop functionality, shows a file picker button, displays a thumbnail preview of the selected image, and converts the image to a Base64 string. The component should accept onChange callback to pass the Base64 string to the parent form, display file size validation errors, and provide a clear/remove button to delete the selected photo. Style with a dashed border glow effect for the drop zone, teal accent on hover, and dark navy background matching the application theme."
+        },
+        {
+          "path": "frontend/src/components/PredictionResultsPanel.tsx",
+          "operation": "create",
+          "description": "Create a panel component that displays prediction results from the analyzeAndPredict function. Show riskScore with RiskBadge component, riskLevel as text, health score as a progress bar (calculated as 100 - riskScore), deteriorationRate as a percentage, maintenanceYear as a formatted year, estimatedCost formatted as currency using the currency formatter from frontend/src/lib/utils.ts, and recommendedAction as text. Style with dark background, teal/amber color coding for metrics, glow borders, and monospace typography for numeric values. Include a loading state skeleton when data is being fetched."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Extend Tailwind theme with custom colors (navy: #0A1929, slate: #1E293B, teal: #00D9FF, amber: #FFB800), add monospace font family for data display, configure glow/shadow utilities for card borders, and set dark mode as default"
+          "description": "Register the /add route in the router configuration, mapping to the AddInfrastructure page component. Ensure the route is wrapped in the Layout component for consistent navigation and sidebar."
         },
         {
           "path": "frontend/src/components/Layout.tsx",
-          "operation": "create",
-          "description": "Create Layout component with top navigation bar (app title 'Smart City Risk Dashboard', nav links to Dashboard/Map/Budget/Analytics), left sidebar slot for filters, and main content area wrapper. Apply dark navy background, teal accent borders, and ensure responsive layout with sidebar toggle for mobile"
-        },
-        {
-          "path": "frontend/src/components/Sidebar.tsx",
-          "operation": "create",
-          "description": "Create Sidebar component shell for filter controls with dark slate background, teal border glow, and placeholder for filter components to be populated in REQ-8"
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wrap application routes with Layout component, configure React Router with routes for Dashboard (/), Map (/map), Budget (/budget), Analytics (/analytics), and Detail (/infrastructure/:id). Ensure Layout is applied to all routes"
+          "description": "Add a navigation link to the top navigation bar for the Add/Analyze Infrastructure page. The link should navigate to /add and be styled consistently with existing nav items (Dashboard, Map View, Budget Planning, Analytics). Include an icon (plus or upload symbol) and label 'Add Infrastructure'."
         }
       ]
     },
     {
-      "id": "REQ-7",
-      "summary": "Build Infrastructure Listing Dashboard with sortable/filterable table, risk badges, health scores, and summary stats",
+      "id": "REQ-20",
+      "summary": "Update InfrastructureEditForm with photo upload and prediction suggestions",
       "acceptanceCriteria": [
-        "Table displays all 20+ seeded records with all required columns",
-        "Risk badge uses red for High, amber for Moderate, green for Low",
-        "Health score displays as a percentage (0–100%)",
-        "Summary stats bar correctly aggregates total, risk breakdown, and average health score"
+        "Edit form includes a photo upload field with preview for existing and new photos",
+        "Uploading a new photo triggers analyzeAndPredict and shows a suggestion panel",
+        "Suggestion panel displays predicted riskScore, conditionRating, deteriorationRate, maintenanceYear, and budgetEstimate",
+        "Accept Suggestions button auto-fills form fields with predicted values",
+        "Dismiss button hides the suggestion panel without modifying form fields",
+        "Photo is saved with the updated record on form submission"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/hooks/useInfrastructure.ts",
-          "operation": "create",
-          "description": "Create custom hook that fetches all infrastructure records from backend using getAllInfrastructure(), manages loading and error states, and returns typed Infrastructure array. Include refetch capability for updates"
-        },
-        {
-          "path": "frontend/src/components/InfrastructureTable.tsx",
-          "operation": "create",
-          "description": "Create sortable data table component displaying infrastructure records with columns: name, structureType, area, age, riskScore (with colored badge component), riskLevel, healthScore (computed as 100 - riskScore, displayed as percentage with progress indicator), maintenanceYear, and action button linking to detail view. Use shadcn/ui Table component with sort handlers for each column"
-        },
-        {
-          "path": "frontend/src/components/RiskBadge.tsx",
-          "operation": "create",
-          "description": "Create RiskBadge component that renders riskLevel with color-coding: red background/text for High, amber for Moderate, green for Low. Use shadcn/ui Badge component with custom color variants matching theme"
-        },
-        {
-          "path": "frontend/src/components/SummaryStats.tsx",
-          "operation": "create",
-          "description": "Create SummaryStats component that computes and displays: total structure count, breakdown by risk level (Low/Moderate/High counts), and average health score percentage. Render as horizontal stat cards with teal borders and amber highlights for critical metrics"
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "create",
-          "description": "Create Dashboard page component that uses useInfrastructure hook to fetch data, renders SummaryStats at top, and InfrastructureTable below. Apply filter context (to be implemented in REQ-8) to filter displayed records. Ensure Layout wrapper is applied via routing"
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Implement filter panel with risk level, structure type, area, and maintenance urgency filters applying to table and map",
-      "acceptanceCriteria": [
-        "All four filter dimensions are present in the sidebar",
-        "Selecting any filter immediately updates the infrastructure table and map markers",
-        "Multiple filters can be applied simultaneously",
-        "A 'Reset Filters' button restores all defaults"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/contexts/FilterContext.tsx",
-          "operation": "create",
-          "description": "Create React context for filter state management with fields: riskLevel (Low/Moderate/High/All), structureType (Bridge/Road/All), area (string/All), maintenanceUrgency (Immediate/Scheduled/Monitor/All). Provide filterInfrastructure function that applies all active filters to Infrastructure array and returns filtered results. Include reset function"
-        },
-        {
-          "path": "frontend/src/components/FilterPanel.tsx",
-          "operation": "create",
-          "description": "Create FilterPanel component using FilterContext with four shadcn/ui Select dropdowns for risk level, structure type, area (populated dynamically from infrastructure records), and maintenance urgency. Include 'Reset Filters' button. Apply dark slate background with teal accent borders"
-        },
-        {
-          "path": "frontend/src/components/Sidebar.tsx",
-          "operation": "modify",
-          "description": "Replace placeholder content with FilterPanel component, ensuring it renders within the sidebar layout and applies theme styling"
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Wrap Dashboard page with FilterContext provider and apply filter function to infrastructure records before passing to InfrastructureTable. Ensure filtered data updates in real-time when filters change"
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Build GIS Heatmap Visualization page with Leaflet map, color-coded risk markers, heatmap overlay, and interactive popups",
-      "acceptanceCriteria": [
-        "Map renders with OpenStreetMap tiles and all infrastructure markers plotted at their lat/lon coordinates",
-        "Markers are color-coded by risk level",
-        "Heatmap overlay layer visualizes risk concentration zones",
-        "Clicking a marker shows a popup with name, type, risk score, health score, and maintenance year",
-        "Filters from the sidebar affect which markers are shown on the map"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/InfrastructureMap.tsx",
-          "operation": "create",
-          "description": "Create map component using react-leaflet with OpenStreetMap tiles. Render infrastructure records as Marker components with custom icons color-coded by riskLevel (red for High, orange for Moderate, green for Low). Add Popup component to each marker showing structure name, structureType, riskScore, healthScore (100 - riskScore), and maintenanceYear. Use leaflet.heat plugin to render heatmap overlay layer with intensity based on riskScore values. Ensure map centers on city bounding box of seeded data"
-        },
-        {
-          "path": "frontend/src/pages/MapView.tsx",
-          "operation": "create",
-          "description": "Create MapView page that uses FilterContext to get filtered infrastructure records and passes them to InfrastructureMap component. Wrap with Layout. Ensure filters from sidebar update map markers and heatmap in real-time"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register /map route for MapView page in React Router configuration, ensuring FilterContext provider wraps this route"
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Build Infrastructure Detail page with full metrics, radial gauge, line chart for predictions, and edit form",
-      "acceptanceCriteria": [
-        "Detail page displays all engineering fields and computed metrics",
-        "Recharts line chart shows condition rating trajectory at current, +5, +10, +20 years",
-        "Radial/circular gauge displays risk score 0–100",
-        "Budget estimate and recommended action are shown",
-        "Edit form allows updating parameters and recalculates risk/predictions on save"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useInfrastructureDetail.ts",
-          "operation": "create",
-          "description": "Create custom hook that accepts infrastructure id parameter, fetches single record using getInfrastructureById(id), predictions using getPredictions(id), and budget estimate using getBudgetEstimate(id). Return all three data sets with loading/error states and refetch function"
-        },
-        {
-          "path": "frontend/src/components/RiskGauge.tsx",
-          "operation": "create",
-          "description": "Create radial gauge component using Recharts RadialBarChart to display riskScore (0-100) with color gradient from green (low) through amber (moderate) to red (high). Display numeric score in center with theme styling"
-        },
-        {
-          "path": "frontend/src/components/ConditionChart.tsx",
-          "operation": "create",
-          "description": "Create Recharts LineChart component that plots condition rating over time with data points: current (structuralConditionRating), +5 years (rating5), +10 years (rating10), +20 years (rating20) from predictions. Include reference line at critical threshold (3.0). Use teal line color with gradient fill"
-        },
         {
           "path": "frontend/src/components/InfrastructureEditForm.tsx",
-          "operation": "create",
-          "description": "Create edit form using shadcn/ui Form components with inputs for all engineering parameters: name, age, trafficLoadFactor, materialType (select), environmentalExposureFactor, structuralConditionRating, notes. On submit, call updateInfrastructure(id, updatedRecord) and trigger refetch of detail data to show recalculated risk/predictions. Include validation and loading states"
-        },
-        {
-          "path": "frontend/src/pages/InfrastructureDetail.tsx",
-          "operation": "create",
-          "description": "Create detail page that uses useInfrastructureDetail hook with route parameter id. Display full structure details in card layout: engineering parameters section, RiskGauge for risk score, health score progress bar, deterioration rate indicator, forecasted maintenance year, ConditionChart for predictions, budget estimate card with recommendedAction, and InfrastructureEditForm in collapsible section. Apply theme with card glow borders"
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Register /infrastructure/:id route for InfrastructureDetail page in React Router configuration"
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Build Budget Planning page with city budget summary, bar/pie charts, priority list, and optimization recommendations",
-      "acceptanceCriteria": [
-        "Total city maintenance budget is displayed prominently",
-        "Bar chart shows budget by risk level category",
-        "Pie chart shows bridge vs road budget split",
-        "Top-10 priority list is sorted by urgency/cost and shows recommended action",
-        "Budget optimization section highlights highest-priority structures"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useCityBudget.ts",
-          "operation": "create",
-          "description": "Create custom hook that fetches city budget summary using getCityBudgetSummary() and returns totalEstimatedBudget, breakdownByRiskLevel, and topPriorityStructures array with loading/error states"
+          "description": "Add a photo upload field to the existing edit form using the PhotoUpload component. Display the existing photoBase64 as a thumbnail preview if present. When a new photo is uploaded, automatically trigger the useAnalyzeAndPredict hook with the current form data plus the new photo Base64 string. Show a PredictionSuggestionsPanel side panel when prediction results are available. Include Accept Suggestions and Dismiss buttons in the panel. The Accept button should auto-fill form fields (structuralConditionRating, and any other predicted values returned) with the suggested values from the prediction result. The Dismiss button hides the panel without modifying form fields. Ensure the photoBase64 field is included in the form submission payload when calling useUpdateInfrastructure. Add loading states during prediction analysis."
         },
         {
-          "path": "frontend/src/components/BudgetByRiskChart.tsx",
+          "path": "frontend/src/components/PredictionSuggestionsPanel.tsx",
           "operation": "create",
-          "description": "Create Recharts BarChart component displaying budget breakdown by risk level (Low, Moderate, High) using breakdownByRiskLevel data. Use color-coding matching risk badges (green, amber, red). Format currency values on axis"
-        },
-        {
-          "path": "frontend/src/components/BudgetByTypeChart.tsx",
-          "operation": "create",
-          "description": "Create Recharts PieChart component showing budget allocation split between bridges and roads. Compute totals by summing estimated costs per structure type from all infrastructure records. Use teal and amber theme colors for segments"
-        },
-        {
-          "path": "frontend/src/components/PriorityList.tsx",
-          "operation": "create",
-          "description": "Create ranked list component displaying top-10 structures from topPriorityStructures array. Show structure name, type, estimated cost, urgencyLevel, and recommendedAction for each. Render as cards with urgency color indicators"
-        },
-        {
-          "path": "frontend/src/components/BudgetOptimization.tsx",
-          "operation": "create",
-          "description": "Create optimization recommendation section that analyzes topPriorityStructures to identify highest ROI targets (highest risk reduction per dollar, computed as riskScore / estimatedCost ratio). Display top 3 recommendations with rationale in prominent cards with amber accent borders"
-        },
-        {
-          "path": "frontend/src/pages/BudgetPlanning.tsx",
-          "operation": "create",
-          "description": "Create Budget Planning page using useCityBudget hook. Display total budget prominently at top, render BudgetByRiskChart and BudgetByTypeChart side-by-side, show PriorityList of top-10 structures, and include BudgetOptimization section. Wrap with Layout"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register /budget route for BudgetPlanning page in React Router configuration"
-        }
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "summary": "Build Analytics & Comparison page with scatter plot, area comparison chart, histogram, and side-by-side comparison table",
-      "acceptanceCriteria": [
-        "Scatter plot shows Age vs Risk Score with color encoding for structure type",
-        "Bar chart shows average health score per city area",
-        "Health score distribution histogram is rendered",
-        "Comparison table supports selecting and comparing 2–3 structures side-by-side"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AgeRiskScatterPlot.tsx",
-          "operation": "create",
-          "description": "Create Recharts ScatterChart component plotting Age (x-axis) vs Risk Score (y-axis) for all infrastructure records. Use different colors for bridge vs road structure types (teal for bridges, amber for roads). Include tooltip showing structure name and metrics"
-        },
-        {
-          "path": "frontend/src/components/AreaHealthChart.tsx",
-          "operation": "create",
-          "description": "Create Recharts BarChart component displaying average health score per city area. Compute averages by grouping infrastructure records by location.area and calculating mean of (100 - riskScore) for each area. Use teal bars with amber highlights for areas below average"
-        },
-        {
-          "path": "frontend/src/components/HealthDistributionHistogram.tsx",
-          "operation": "create",
-          "description": "Create Recharts BarChart histogram showing distribution of health scores across all structures. Create bins (0-20, 21-40, 41-60, 61-80, 81-100) and count structures in each bin. Use gradient fill from red (low health) to green (high health)"
-        },
-        {
-          "path": "frontend/src/components/InfrastructureComparison.tsx",
-          "operation": "create",
-          "description": "Create comparison component with multi-select dropdown (using shadcn/ui Select) allowing user to select 2-3 infrastructure structures by name. Fetch details for selected structures using getInfrastructureById for each. Display side-by-side comparison table showing all metrics, predicted maintenance years, and budget estimates in columns. Highlight differences with color coding"
-        },
-        {
-          "path": "frontend/src/pages/Analytics.tsx",
-          "operation": "create",
-          "description": "Create Analytics page that fetches all infrastructure using useInfrastructure hook. Render AgeRiskScatterPlot, AreaHealthChart, and HealthDistributionHistogram in grid layout. Include InfrastructureComparison component in expandable section below charts. Wrap with Layout"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register /analytics route for Analytics page in React Router configuration"
-        }
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "summary": "Implement real-time sensor simulation on detail page with live updates, blinking indicator, and frontend-only recomputation",
-      "acceptanceCriteria": [
-        "Sensor simulation toggle is present on the detail page",
-        "When active, condition rating and traffic load values update every 3 seconds with small random variations",
-        "Risk score and health score recompute and update in real time on the frontend",
-        "A 'LIVE' blinking indicator is visible when simulation is running",
-        "Stopping the simulation restores the last saved backend values"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useSensorSimulation.ts",
-          "operation": "create",
-          "description": "Create custom hook that manages sensor simulation state. Accept initial structuralConditionRating and trafficLoadFactor. When active, use setInterval (3000ms) to randomize condition rating (±0.1 to ±0.3) and traffic load (±5%). Compute riskScore on frontend using same formula as backend: (AgeFactor × 0.30) + (TrafficLoadFactor × 0.25) + (MaterialFactor × 0.20) + (EnvironmentalFactor × 0.15) + (InverseConditionRating × 0.10), normalized to 0-100. Return simulated values, isActive state, toggle function, and reset function that restores original backend values"
-        },
-        {
-          "path": "frontend/src/components/SensorSimulation.tsx",
-          "operation": "create",
-          "description": "Create sensor simulation component with shadcn/ui Switch toggle labeled 'Start Sensor Simulation'. When active, display live sensor readout panel showing current simulated values (condition rating, traffic load, recomputed risk score, health score) with animated blinking 'LIVE' indicator (CSS animation with teal glow pulse). Show last update timestamp. Use useSensorSimulation hook for state management"
+          "description": "Create a side panel component that displays prediction suggestions when a new photo is uploaded in the edit form. Show the predicted riskScore with RiskBadge, structuralConditionRating (derived from prediction), deteriorationRate, maintenanceYear, and budgetEstimate (estimatedCost formatted as currency). Include two action buttons: Accept Suggestions (calls an onAccept callback to auto-fill parent form fields) and Dismiss (calls an onDismiss callback to hide the panel). Style as a floating panel with dark background, amber accent border, glow effect, and teal highlights for the Accept button. Position the panel to the right side of the form or below on mobile."
         },
         {
           "path": "frontend/src/pages/InfrastructureDetail.tsx",
           "operation": "modify",
-          "description": "Integrate SensorSimulation component into detail page. Pass infrastructure parameters to useSensorSimulation hook. When simulation is active, display simulated values instead of backend values in risk gauge, health score bar, and metrics display. Show clear visual indication that displayed values are simulated (border or badge). Ensure stopping simulation restores and displays original backend values"
-        }
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "summary": "Create city infrastructure overview hero section on home page with animated counters, alert banner, mini map, quick-access cards, and system status",
-      "acceptanceCriteria": [
-        "Home page shows animated counters for total structures and high-risk count",
-        "Risk alert banner is visually prominent and shows correct high-risk count",
-        "Quick-access cards navigate correctly to each section",
-        "System status shows last data refresh timestamp"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AnimatedCounter.tsx",
-          "operation": "create",
-          "description": "Create animated counter component that counts up from 0 to target value over 1.5 seconds using requestAnimationFrame or React Spring. Accept target number and format string (e.g., integer, percentage). Apply theme typography with teal glow effect"
-        },
-        {
-          "path": "frontend/src/components/RiskAlertBanner.tsx",
-          "operation": "create",
-          "description": "Create prominent alert banner component that displays count of High-risk structures requiring immediate attention. Fetch infrastructure records and filter by riskLevel === 'high'. Use red/amber gradient background with pulsing animation. Include 'View Details' link to filtered dashboard view"
-        },
-        {
-          "path": "frontend/src/components/MiniMapThumbnail.tsx",
-          "operation": "create",
-          "description": "Create mini map thumbnail component using static Leaflet map (no interactions) showing all infrastructure markers. Set fixed dimensions (400x300). On click, navigate to /map. Use heatmap-placeholder.dim_600x400.png from generated assets as decorative overlay if map loading is slow"
-        },
-        {
-          "path": "frontend/src/components/QuickAccessGrid.tsx",
-          "operation": "create",
-          "description": "Create grid of four quick-access cards linking to main sections: Infrastructure List (/), City Map (/map), Budget Planning (/budget), and Analytics (/analytics). Each card shows icon, title, and brief description. Use teal border glow on hover. Apply responsive grid layout (2x2 on desktop, 1 column on mobile)"
-        },
-        {
-          "path": "frontend/src/components/SystemStatus.tsx",
-          "operation": "create",
-          "description": "Create system status indicator component showing 'Data Last Refreshed' timestamp (use current time as placeholder or track last fetch time from useInfrastructure hook). Display with small green/teal indicator dot and monospace timestamp. Include 'Refresh Data' button that triggers refetch"
-        },
-        {
-          "path": "frontend/src/components/HeroSection.tsx",
-          "operation": "create",
-          "description": "Create hero section component that uses hero-banner.dim_1400x400.png from workspace path frontend/public/assets/generated/hero-banner.dim_1400x400.png as background image. Overlay with dark gradient for text readability. Display app title 'Smart City Infrastructure Risk Dashboard' as large heading. Include two AnimatedCounter components showing total structures and high-risk count. Render RiskAlertBanner, MiniMapThumbnail, QuickAccessGrid, and SystemStatus in structured layout"
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Add HeroSection component at the top of Dashboard page, above SummaryStats and InfrastructureTable. Ensure hero section spans full width and applies theme styling consistently"
-        }
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "summary": "Wire generated images into UI as static assets",
-      "acceptanceCriteria": [
-        "Hero banner image is used on the home page header",
-        "City illustration is used as a decorative background or map placeholder"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/HeroSection.tsx",
-          "operation": "modify",
-          "description": "Set background image of hero section to frontend/public/assets/generated/hero-banner.dim_1400x400.png using CSS background-image or img tag. Ensure image loads correctly and applies dark overlay for text contrast"
-        },
-        {
-          "path": "frontend/src/components/MiniMapThumbnail.tsx",
-          "operation": "modify",
-          "description": "Use frontend/public/assets/generated/city-infrastructure-iso.dim_800x500.png as decorative background image for mini map thumbnail component, displayed while Leaflet map loads or as fallback static preview"
-        },
-        {
-          "path": "frontend/src/components/Layout.tsx",
-          "operation": "modify",
-          "description": "Add app logo icon from frontend/public/assets/generated/app-logo-icon.dim_128x128.png to top navigation bar next to app title. Size appropriately (32x32 or 48x48) and ensure it links to home page"
-        },
-        {
-          "path": "frontend/src/pages/MapView.tsx",
-          "operation": "modify",
-          "description": "Use frontend/public/assets/generated/heatmap-placeholder.dim_600x400.png as loading placeholder or decorative background element on MapView page while Leaflet map and heatmap data initialize"
+          "description": "Update the detail page to display the infrastructure photo if photoBase64 is present. Show the Base64-encoded image as a thumbnail or full-width image above or beside the risk gauge and condition chart. Style the image display with rounded corners, shadow, and glow border consistent with the application theme. Ensure the photo is visible in both view mode and when the InfrastructureEditForm is rendered."
         }
       ]
     }

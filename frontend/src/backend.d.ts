@@ -16,12 +16,51 @@ export interface Prediction {
         rating5: number;
     };
 }
+export interface BudgetEstimate {
+    urgencyLevel: UrgencyLevel;
+    recommendedAction: string;
+    estimatedCost: number;
+}
+export interface CityBudgetSummary {
+    breakdownByRiskLevel: {
+        low: number;
+        high: number;
+        moderate: number;
+    };
+    topPriorityStructures: Array<Infrastructure>;
+    totalEstimatedBudget: number;
+}
+export interface PredictionResult {
+    deteriorationRate: number;
+    maintenanceYear: bigint;
+    budgetEstimate: BudgetEstimate;
+    riskLevel: RiskLevel;
+    riskScore: number;
+}
+export interface InfrastructureInput {
+    id: string;
+    age: bigint;
+    trafficLoadFactor: number;
+    name: string;
+    structuralConditionRating: number;
+    photoBase64?: string;
+    environmentalExposureFactor: number;
+    notes: string;
+    structureType: StructureType;
+    materialType: MaterialType;
+    location: {
+        latitude: number;
+        area: string;
+        longitude: number;
+    };
+}
 export interface Infrastructure {
     id: string;
     age: bigint;
     trafficLoadFactor: number;
     name: string;
     structuralConditionRating: number;
+    photoBase64?: string;
     environmentalExposureFactor: number;
     notes: string;
     structureType: StructureType;
@@ -34,19 +73,8 @@ export interface Infrastructure {
     };
     riskScore: number;
 }
-export interface CityBudgetSummary {
-    breakdownByRiskLevel: {
-        low: number;
-        high: number;
-        moderate: number;
-    };
-    topPriorityStructures: Array<Infrastructure>;
-    totalEstimatedBudget: number;
-}
-export interface BudgetEstimate {
-    urgencyLevel: UrgencyLevel;
-    recommendedAction: string;
-    estimatedCost: number;
+export interface UserProfile {
+    name: string;
 }
 export enum MaterialType {
     compositeMaterial = "compositeMaterial",
@@ -68,13 +96,26 @@ export enum UrgencyLevel {
     monitorOnly = "monitorOnly",
     scheduledMaintenance = "scheduledMaintenance"
 }
+export enum UserRole {
+    admin = "admin",
+    user = "user",
+    guest = "guest"
+}
 export interface backendInterface {
-    addInfrastructure(input: Infrastructure): Promise<void>;
+    addInfrastructure(input: InfrastructureInput): Promise<void>;
+    analyzeAndPredict(input: InfrastructureInput): Promise<PredictionResult>;
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteInfrastructure(id: string): Promise<void>;
     getAllInfrastructure(): Promise<Array<Infrastructure>>;
     getBudgetEstimate(id: string): Promise<BudgetEstimate>;
+    getCallerUserProfile(): Promise<UserProfile | null>;
+    getCallerUserRole(): Promise<UserRole>;
     getCityBudgetSummary(): Promise<CityBudgetSummary>;
     getInfrastructureById(id: string): Promise<Infrastructure>;
     getPredictions(id: string): Promise<Prediction>;
-    updateInfrastructure(id: string, input: Infrastructure): Promise<void>;
+    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    initializeData(): Promise<void>;
+    isCallerAdmin(): Promise<boolean>;
+    saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    updateInfrastructure(id: string, input: InfrastructureInput): Promise<void>;
 }

@@ -2,13 +2,34 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-build-a-react-typescript-frontend-dashboard-as-the-main-layout-with-a-top-navigation-bar-app-title-nav-links-a-left-sidebar-for-filters-and-a-main-content-area-the-overall-visual-theme-must-be-a-dark-mode-government-intelligence-aesthetic-inspired-by-singapore-smart-nation-and-siemens-deep-navy-slate-background-electric-teal-and-amber-accent-colors-monospace-data-typography-card-based-panels-with-subtle-glow-borders-and-a-data-dense-professional-layout-apply-this-theme-consistently-across-all-views",
-      "featureTitle": "Build a React + TypeScript frontend dashboard as the main layout with a top navigation bar (app title, nav links), a left sidebar for filters, and a main content area. The overall visual theme must be a dark-mode government intelligence aesthetic inspired by Singapore Smart Nation and Siemens — deep navy/slate background, electric teal and amber accent colors, monospace data typography, card-based panels with subtle glow borders, and a data-dense professional layout. Apply this theme consistently across all views.",
+      "featureId": "feature-add-a-react-query-hook-useanalyzeandpredict-in-frontend-src-hooks-usequeries-ts-that-calls-the-backend-analyzeandpredict-function-with-infrastructure-form-data-including-the-uploaded-photo-base64-string",
+      "featureTitle": "Add a React Query hook `useAnalyzeAndPredict` in `frontend/src/hooks/useQueries.ts` that calls the backend `analyzeAndPredict` function with infrastructure form data including the uploaded photo Base64 string.",
+      "files": [
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-a-new-add-analyze-infrastructure-page-route-add-accessible-from-the-top-navigation-bar-the-page-must-include-a-full-infrastructure-details-form-name-structuretype-area-age-trafficloadfactor-materialtype-environmentalexposurefactor-structuralconditionrating-notes-a-photo-upload-widget-with-drag-and-drop-and-file-picker-support-showing-a-preview-thumbnail-an-analyze-predict-button-that-calls-the-backend-analyzeandpredict-function-and-an-auto-populated-prediction-results-panel-that-appears-after-analysis-showing-risk-score-with-colored-badge-risk-level-health-score-progress-bar-deterioration-rate-forecasted-maintenance-year-estimated-budget-cost-and-recommended-action-a-save-to-database-button-saves-the-record-with-photo-to-the-backend",
+      "featureTitle": "Build a new 'Add / Analyze Infrastructure' page (route `/add`) accessible from the top navigation bar. The page must include: a full infrastructure details form (name, structureType, area, age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating, notes), a photo upload widget with drag-and-drop and file-picker support showing a preview thumbnail, an 'Analyze & Predict' button that calls the backend analyzeAndPredict function, and an auto-populated Prediction Results panel that appears after analysis showing: risk score with colored badge, risk level, health score progress bar, deterioration rate, forecasted maintenance year, estimated budget cost, and recommended action. A 'Save to Database' button saves the record (with photo) to the backend.",
       "files": [
         "frontend/src/App.tsx",
         "frontend/src/components/Layout.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
+        "frontend/src/components/PhotoUpload.tsx",
+        "frontend/src/components/PredictionResultsPanel.tsx",
+        "frontend/src/pages/AddInfrastructure.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -16,85 +37,20 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-6"
+        "REQ-19"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-build-an-infrastructure-listing-dashboard-page-that-fetches-all-infrastructure-records-from-the-backend-and-displays-them-in-a-sortable-filterable-data-table-each-row-must-show-name-structuretype-area-age-riskscore-with-colored-badge-red-amber-green-risklevel-healthscore-100-riskscore-as-a-percentage-maintenanceyear-and-an-action-button-to-view-details-include-a-summary-stats-bar-at-the-top-showing-total-structures-count-by-risk-level-and-average-health-score",
-      "featureTitle": "Build an Infrastructure Listing Dashboard page that fetches all infrastructure records from the backend and displays them in a sortable, filterable data table. Each row must show: name, structureType, area, age, riskScore (with colored badge: red/amber/green), riskLevel, healthScore (100 - riskScore as a percentage), maintenanceYear, and an action button to view details. Include a summary stats bar at the top showing total structures, count by risk level, and average health score.",
+      "featureId": "feature-update-the-existing-infrastructureeditform-component-to-include-a-photo-upload-field-when-a-new-photo-is-uploaded-on-an-existing-record-re-run-the-analyzeandpredict-function-and-show-updated-prediction-suggestions-in-a-side-panel-next-to-the-form-the-user-can-accept-the-suggested-values-auto-fill-form-fields-or-dismiss-them",
+      "featureTitle": "Update the existing `InfrastructureEditForm` component to include a photo upload field. When a new photo is uploaded on an existing record, re-run the analyzeAndPredict function and show updated prediction suggestions in a side panel next to the form. The user can accept the suggested values (auto-fill form fields) or dismiss them.",
       "files": [
-        "frontend/src/components/InfrastructureTable.tsx",
-        "frontend/src/components/RiskBadge.tsx",
-        "frontend/src/components/SummaryStats.tsx",
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-a-filter-panel-in-the-left-sidebar-that-allows-filtering-the-infrastructure-list-and-map-by-risk-level-low-moderate-high-all-structure-type-bridge-road-all-city-area-dropdown-with-all-5-seeded-areas-all-and-maintenance-urgency-immediate-scheduled-monitor-all-filters-must-apply-in-real-time-to-both-the-listing-table-and-the-heatmap-simultaneously",
-      "featureTitle": "Implement a filter panel in the left sidebar that allows filtering the infrastructure list and map by: risk level (Low / Moderate / High / All), structure type (Bridge / Road / All), city area (dropdown with all 5 seeded areas + All), and maintenance urgency (Immediate / Scheduled / Monitor / All). Filters must apply in real-time to both the listing table and the heatmap simultaneously.",
-      "files": [
-        "frontend/src/components/FilterPanel.tsx",
-        "frontend/src/contexts/FilterContext.tsx",
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-a-gis-heatmap-visualization-page-using-leaflet-js-react-leaflet-that-renders-all-infrastructure-structures-as-map-markers-on-a-city-tile-map-each-marker-must-be-color-coded-by-risk-level-red-high-orange-moderate-green-low-implement-a-heatmap-overlay-layer-using-leaflet-heat-leaflet-heat-plugin-showing-density-and-severity-of-risk-zones-across-the-city-clicking-a-marker-opens-a-popup-showing-the-structure-name-type-risk-score-health-score-and-maintenance-year",
-      "featureTitle": "Build a GIS Heatmap Visualization page using Leaflet.js (react-leaflet) that renders all infrastructure structures as map markers on a city tile map. Each marker must be color-coded by risk level (red = High, orange = Moderate, green = Low). Implement a heatmap overlay layer using Leaflet.heat (leaflet.heat plugin) showing density and severity of risk zones across the city. Clicking a marker opens a popup showing the structure name, type, risk score, health score, and maintenance year.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/InfrastructureMap.tsx",
-        "frontend/src/pages/MapView.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-an-infrastructure-detail-page-accessible-by-clicking-a-record-in-the-table-or-map-popup-that-shows-full-details-for-one-structure-it-must-include-all-engineering-input-parameters-risk-score-with-a-radial-gauge-chart-health-score-as-a-progress-bar-a-recharts-line-chart-showing-predicted-condition-rating-over-time-5-10-20-years-a-deterioration-rate-indicator-the-forecasted-maintenance-year-budget-estimate-with-recommended-action-and-an-edit-form-to-update-the-structure-s-parameters",
-      "featureTitle": "Build an Infrastructure Detail page (accessible by clicking a record in the table or map popup) that shows full details for one structure. It must include: all engineering input parameters, risk score with a radial gauge chart, health score as a progress bar, a Recharts line chart showing predicted condition rating over time (+5, +10, +20 years), a deterioration rate indicator, the forecasted maintenance year, budget estimate with recommended action, and an edit form to update the structure's parameters.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ConditionChart.tsx",
         "frontend/src/components/InfrastructureEditForm.tsx",
-        "frontend/src/components/RiskGauge.tsx",
+        "frontend/src/components/PredictionSuggestionsPanel.tsx",
         "frontend/src/pages/InfrastructureDetail.tsx"
       ],
       "components": [
@@ -103,121 +59,11 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-a-budget-planning-page-that-fetches-the-city-budget-summary-from-the-backend-and-displays-total-estimated-maintenance-budget-for-the-city-a-recharts-bar-chart-showing-budget-breakdown-by-risk-level-a-recharts-pie-chart-showing-budget-allocation-by-structure-type-bridges-vs-roads-a-ranked-list-of-top-10-highest-priority-structures-with-their-estimated-costs-and-recommended-actions-and-a-budget-optimization-recommendation-section-that-identifies-highest-roi-maintenance-targets-highest-risk-reduction-per-dollar-spent",
-      "featureTitle": "Build a Budget Planning page that fetches the city budget summary from the backend and displays: total estimated maintenance budget for the city, a Recharts bar chart showing budget breakdown by risk level, a Recharts pie chart showing budget allocation by structure type (bridges vs roads), a ranked list of top-10 highest-priority structures with their estimated costs and recommended actions, and a budget optimization recommendation section that identifies highest-ROI maintenance targets (highest risk reduction per dollar spent).",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/BudgetByRiskChart.tsx",
-        "frontend/src/components/BudgetByTypeChart.tsx",
-        "frontend/src/components/BudgetOptimization.tsx",
-        "frontend/src/components/PriorityList.tsx",
-        "frontend/src/pages/BudgetPlanning.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-an-analytics-comparison-page-that-displays-a-recharts-scatter-plot-of-age-vs-risk-score-for-all-structures-colored-by-structure-type-a-recharts-bar-chart-comparing-average-health-scores-across-city-areas-a-distribution-histogram-of-health-scores-across-all-structures-and-an-infrastructure-comparison-table-that-allows-selecting-2-3-structures-side-by-side-to-compare-all-their-metrics-predicted-maintenance-years-and-budget-estimates",
-      "featureTitle": "Build an Analytics & Comparison page that displays: a Recharts scatter plot of Age vs Risk Score for all structures (colored by structure type), a Recharts bar chart comparing average health scores across city areas, a distribution histogram of health scores across all structures, and an infrastructure comparison table that allows selecting 2–3 structures side-by-side to compare all their metrics, predicted maintenance years, and budget estimates.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/AgeRiskScatterPlot.tsx",
-        "frontend/src/components/AreaHealthChart.tsx",
-        "frontend/src/components/HealthDistributionHistogram.tsx",
-        "frontend/src/components/InfrastructureComparison.tsx",
-        "frontend/src/pages/Analytics.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-12"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-a-real-time-sensor-simulation-feature-on-the-infrastructure-detail-page-add-a-start-sensor-simulation-toggle-that-when-active-simulates-live-sensor-readings-every-3-seconds-by-slightly-randomizing-the-structural-condition-rating-0-1-0-3-range-and-traffic-load-5-and-recomputing-the-risk-score-and-health-score-in-real-time-on-the-frontend-display-a-live-updating-sensor-readout-panel-with-animated-blinking-indicator-showing-live-status",
-      "featureTitle": "Implement a real-time sensor simulation feature on the Infrastructure Detail page. Add a 'Start Sensor Simulation' toggle that, when active, simulates live sensor readings every 3 seconds by slightly randomizing the structural condition rating (±0.1–0.3 range) and traffic load (±5%) and recomputing the risk score and health score in real time on the frontend. Display a live-updating sensor readout panel with animated blinking indicator showing 'LIVE' status.",
-      "files": [
-        "frontend/src/components/SensorSimulation.tsx",
-        "frontend/src/hooks/useSensorSimulation.ts",
-        "frontend/src/pages/InfrastructureDetail.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-13"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-city-infrastructure-overview-dashboard-hero-section-on-the-main-landing-home-page-with-a-large-animated-stat-counter-showing-total-structures-monitored-a-risk-alert-banner-highlighting-the-count-of-high-risk-structures-requiring-immediate-attention-a-mini-heatmap-thumbnail-linking-to-the-full-map-view-a-quick-access-card-grid-for-the-four-main-sections-infrastructure-list-city-map-budget-planning-analytics-and-a-system-status-indicator-showing-data-freshness",
-      "featureTitle": "Create a city infrastructure overview dashboard hero section on the main landing/home page with: a large animated stat counter showing total structures monitored, a risk alert banner highlighting the count of High-risk structures requiring immediate attention, a mini heatmap thumbnail linking to the full map view, a quick-access card grid for the four main sections (Infrastructure List, City Map, Budget Planning, Analytics), and a 'System Status' indicator showing data freshness.",
-      "files": [
-        "frontend/src/components/AnimatedCounter.tsx",
-        "frontend/src/components/HeroSection.tsx",
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-14"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-generate-a-city-infrastructure-map-background-illustration-and-a-dashboard-hero-banner-image-for-the-application",
-      "featureTitle": "Generate a city infrastructure map background illustration and a dashboard hero banner image for the application.",
-      "files": [
-        "frontend/src/components/HeroSection.tsx",
-        "frontend/src/components/Layout.tsx",
-        "frontend/src/pages/MapView.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-15"
+        "REQ-20"
       ],
       "confidence": "high"
     }

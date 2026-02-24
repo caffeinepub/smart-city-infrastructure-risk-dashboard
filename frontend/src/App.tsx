@@ -6,6 +6,7 @@ import MapView from './pages/MapView';
 import BudgetPlanning from './pages/BudgetPlanning';
 import Analytics from './pages/Analytics';
 import InfrastructureDetail from './pages/InfrastructureDetail';
+import AddInfrastructure from './pages/AddInfrastructure';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -45,12 +46,19 @@ const infrastructureDetailRoute = createRoute({
   component: InfrastructureDetail,
 });
 
+const addInfrastructureRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/add',
+  component: AddInfrastructure,
+});
+
 const routeTree = rootRoute.addChildren([
   dashboardRoute,
   mapRoute,
   budgetRoute,
   analyticsRoute,
   infrastructureDetailRoute,
+  addInfrastructureRoute,
 ]);
 
 const router = createRouter({ routeTree });

@@ -30,6 +30,7 @@ export interface Infrastructure {
   'trafficLoadFactor' : number,
   'name' : string,
   'structuralConditionRating' : number,
+  'photoBase64' : [] | [string],
   'environmentalExposureFactor' : number,
   'notes' : string,
   'structureType' : StructureType,
@@ -37,6 +38,19 @@ export interface Infrastructure {
   'materialType' : MaterialType,
   'location' : { 'latitude' : number, 'area' : string, 'longitude' : number },
   'riskScore' : number,
+}
+export interface InfrastructureInput {
+  'id' : string,
+  'age' : bigint,
+  'trafficLoadFactor' : number,
+  'name' : string,
+  'structuralConditionRating' : number,
+  'photoBase64' : [] | [string],
+  'environmentalExposureFactor' : number,
+  'notes' : string,
+  'structureType' : StructureType,
+  'materialType' : MaterialType,
+  'location' : { 'latitude' : number, 'area' : string, 'longitude' : number },
 }
 export type MaterialType = { 'compositeMaterial' : null } |
   { 'concrete' : null } |
@@ -51,6 +65,13 @@ export interface Prediction {
     'rating5' : number,
   },
 }
+export interface PredictionResult {
+  'deteriorationRate' : number,
+  'maintenanceYear' : bigint,
+  'budgetEstimate' : BudgetEstimate,
+  'riskLevel' : RiskLevel,
+  'riskScore' : number,
+}
 export type RiskLevel = { 'low' : null } |
   { 'high' : null } |
   { 'moderate' : null };
@@ -59,6 +80,10 @@ export type StructureType = { 'bridge' : null } |
 export type UrgencyLevel = { 'immediateRepair' : null } |
   { 'monitorOnly' : null } |
   { 'scheduledMaintenance' : null };
+export interface UserProfile { 'name' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -86,14 +111,26 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
-  'addInfrastructure' : ActorMethod<[Infrastructure], undefined>,
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addInfrastructure' : ActorMethod<[InfrastructureInput], undefined>,
+  'analyzeAndPredict' : ActorMethod<[InfrastructureInput], PredictionResult>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteInfrastructure' : ActorMethod<[string], undefined>,
   'getAllInfrastructure' : ActorMethod<[], Array<Infrastructure>>,
   'getBudgetEstimate' : ActorMethod<[string], BudgetEstimate>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getCityBudgetSummary' : ActorMethod<[], CityBudgetSummary>,
   'getInfrastructureById' : ActorMethod<[string], Infrastructure>,
   'getPredictions' : ActorMethod<[string], Prediction>,
-  'updateInfrastructure' : ActorMethod<[string, Infrastructure], undefined>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'initializeData' : ActorMethod<[], undefined>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'updateInfrastructure' : ActorMethod<
+    [string, InfrastructureInput],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

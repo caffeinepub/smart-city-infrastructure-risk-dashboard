@@ -17,7 +17,7 @@ import {
 } from '../lib/utils';
 import {
   ArrowLeft, ChevronDown, ChevronUp, MapPin, Calendar,
-  Activity, Wrench, TrendingDown, DollarSign, Edit3
+  Activity, Wrench, TrendingDown, DollarSign, Edit3, Camera
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -107,6 +107,21 @@ export default function InfrastructureDetail() {
       </div>
 
       <div className="p-6 space-y-6">
+        {/* Infrastructure Photo (if available) */}
+        {infra.photoBase64 && (
+          <div className="rounded-lg border border-teal-500/20 bg-card overflow-hidden card-glow">
+            <div className="flex items-center gap-2 px-4 py-2 border-b border-border">
+              <Camera size={13} className="text-teal" />
+              <span className="text-xs text-muted-foreground uppercase tracking-wider font-mono">Infrastructure Photo</span>
+            </div>
+            <img
+              src={`data:image/jpeg;base64,${infra.photoBase64}`}
+              alt={`${infra.name} photo`}
+              className="w-full max-h-64 object-cover"
+            />
+          </div>
+        )}
+
         {/* Top Metrics Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Risk Gauge */}
@@ -287,19 +302,18 @@ export default function InfrastructureDetail() {
 
         {/* Edit Form */}
         <Collapsible open={editOpen} onOpenChange={setEditOpen}>
-          <div className="rounded-lg border border-border bg-card overflow-hidden card-glow">
+          <div className="rounded-lg border border-border bg-card card-glow">
             <CollapsibleTrigger asChild>
-              <button className="w-full flex items-center justify-between p-4 hover:bg-accent/30 transition-colors">
+              <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-accent/20 transition-colors rounded-lg">
                 <div className="flex items-center gap-2">
                   <Edit3 size={14} className="text-teal" />
                   <span className="text-sm font-semibold">Edit Parameters</span>
-                  <span className="text-xs text-muted-foreground">Update engineering data & recalculate risk</span>
                 </div>
-                {editOpen ? <ChevronUp size={16} className="text-muted-foreground" /> : <ChevronDown size={16} className="text-muted-foreground" />}
+                {editOpen ? <ChevronUp size={14} className="text-muted-foreground" /> : <ChevronDown size={14} className="text-muted-foreground" />}
               </button>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div className="p-4 border-t border-border">
+              <div className="px-4 pb-4 pt-2 border-t border-border">
                 <InfrastructureEditForm
                   infrastructure={infra}
                   onSuccess={() => setEditOpen(false)}

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { Infrastructure } from '../backend';
+import { Infrastructure, InfrastructureInput, PredictionResult } from '../backend';
 
 export function useAllInfrastructure() {
   const { actor, isFetching } = useActor();
@@ -85,7 +85,7 @@ export function useAddInfrastructure() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: Infrastructure) => {
+    mutationFn: async (input: InfrastructureInput) => {
       if (!actor) throw new Error('No actor');
       return actor.addInfrastructure(input);
     },
@@ -107,6 +107,16 @@ export function useDeleteInfrastructure() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['infrastructure'] });
       queryClient.invalidateQueries({ queryKey: ['cityBudget'] });
+    },
+  });
+}
+
+export function useAnalyzeAndPredict() {
+  const { actor } = useActor();
+  return useMutation<PredictionResult, Error, InfrastructureInput>({
+    mutationFn: async (input: InfrastructureInput) => {
+      if (!actor) throw new Error('No actor');
+      return actor.analyzeAndPredict(input);
     },
   });
 }

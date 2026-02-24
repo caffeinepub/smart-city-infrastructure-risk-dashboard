@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
-import { Menu, X, BarChart3, Map, DollarSign, TrendingUp, Activity } from 'lucide-react';
+import { Menu, X, BarChart3, Map, DollarSign, TrendingUp, Activity, PlusCircle } from 'lucide-react';
 import { FilterProvider } from '../contexts/FilterContext';
 import FilterPanel from './FilterPanel';
 import { useAllInfrastructure } from '../hooks/useQueries';
@@ -10,6 +10,7 @@ const navLinks = [
   { to: '/map', label: 'City Map', icon: Map },
   { to: '/budget', label: 'Budget', icon: DollarSign },
   { to: '/analytics', label: 'Analytics', icon: TrendingUp },
+  { to: '/add', label: 'Add', icon: PlusCircle },
 ];
 
 interface LayoutProps {
@@ -57,14 +58,19 @@ export default function Layout({ children }: LayoutProps) {
             {navLinks.map(link => {
               const Icon = link.icon;
               const isActive = location.pathname === link.to;
+              const isAdd = link.to === '/add';
               return (
                 <Link
                   key={link.to}
                   to={link.to}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-sm transition-colors ${
                     isActive
-                      ? 'text-teal-500 bg-teal-glow font-medium'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                      ? isAdd
+                        ? 'text-teal bg-teal-glow font-medium border border-teal-500/30'
+                        : 'text-teal-500 bg-teal-glow font-medium'
+                      : isAdd
+                        ? 'text-teal border border-teal-500/20 hover:bg-teal-glow hover:border-teal-500/40'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                   }`}
                 >
                   <Icon size={14} />

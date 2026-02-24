@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Infrastructure, MaterialType, StructureType } from '../backend';
+import React, { useState, useEffect } from 'react';
+import { Infrastructure, MaterialType, StructureType, InfrastructureInput } from '../backend';
 import { getMaterialTypeKey, getStructureTypeKey } from '../lib/utils';
-import { useUpdateInfrastructure } from '../hooks/useQueries';
+import { useUpdateInfrastructure, useAnalyzeAndPredict } from '../hooks/useQueries';
+import PhotoUpload from './PhotoUpload';
+import PredictionSuggestionsPanel from './PredictionSuggestionsPanel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +18,7 @@ interface InfrastructureEditFormProps {
 
 export default function InfrastructureEditForm({ infrastructure, onSuccess }: InfrastructureEditFormProps) {
   const updateMutation = useUpdateInfrastructure();
+  const analyzeMutation = useAnalyzeAndPredict();
 
   const [form, setForm] = useState({
     name: infrastructure.name,
@@ -26,6 +29,54 @@ export default function InfrastructureEditForm({ infrastructure, onSuccess }: In
     structuralConditionRating: infrastructure.structuralConditionRating.toString(),
     notes: infrastructure.notes,
   });
+
+  const [photo, setPhoto] = useState<string | undefined>(
+    infrastructure.photoBase64 ?? undefined
+  );
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // When a new photo is uploaded, auto-trigger analysis
+  const handlePhotoChange = (base64: string | undefined) => {
+    setPhoto(base64);
+    setShowSuggestions(false);
+    analyzeMutation.reset();
+    if (base64) {
+      const materialMap: Record<string, MaterialType> = {
+        concrete: MaterialType.concrete,
+        steel: MaterialType.steel,
+        asphalt: MaterialType.asphalt,
+        compositeMaterial: MaterialType.compositeMaterial,
+      };
+      const structureMap: Record<string, StructureType> = {
+        bridge: StructureType.bridge,
+        road: StructureType.road,
+      };
+      const input: InfrastructureInput = {
+        id: infrastructure.id,
+        name: form.name,
+        structureType: structureMap[getStructureTypeKey(infrastructure.structureType)] || StructureType.bridge,
+        location: infrastructure.location,
+        age: BigInt(parseInt(form.age) || 0),
+        trafficLoadFactor: parseFloat(form.trafficLoadFactor) || 0,
+        materialType: materialMap[form.materialType] || MaterialType.concrete,
+        environmentalExposureFactor: parseFloat(form.environmentalExposureFactor) || 0,
+        structuralConditionRating: parseFloat(form.structuralConditionRating) || 3.5,
+        notes: form.notes,
+        photoBase64: base64,
+      };
+      analyzeMutation.mutate(input, {
+        onSuccess: () => setShowSuggestions(true),
+      });
+    }
+  };
+
+  const handleAcceptSuggestions = (values: { structuralConditionRating: number }) => {
+    setForm(f => ({
+      ...f,
+      structuralConditionRating: values.structuralConditionRating.toFixed(1),
+    }));
+    setShowSuggestions(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +95,7 @@ export default function InfrastructureEditForm({ infrastructure, onSuccess }: In
       environmentalExposureFactor: parseFloat(form.environmentalExposureFactor),
       structuralConditionRating: parseFloat(form.structuralConditionRating),
       notes: form.notes,
+      photoBase64: photo,
     };
     await updateMutation.mutateAsync({ id: infrastructure.id, input: updated });
     onSuccess?.();
@@ -51,6 +103,27 @@ export default function InfrastructureEditForm({ infrastructure, onSuccess }: In
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Photo Upload */}
+      <div className="space-y-1.5">
+        <Label className="text-xs text-muted-foreground uppercase tracking-wider">Infrastructure Photo</Label>
+        <PhotoUpload value={photo} onChange={handlePhotoChange} />
+        {analyzeMutation.isPending && (
+          <div className="flex items-center gap-1.5 text-xs text-teal font-mono">
+            <Loader2 size={11} className="animate-spin" />
+            Analyzing photo...
+          </div>
+        )}
+      </div>
+
+      {/* Suggestions Panel */}
+      {showSuggestions && analyzeMutation.data && (
+        <PredictionSuggestionsPanel
+          result={analyzeMutation.data}
+          onAccept={handleAcceptSuggestions}
+          onDismiss={() => setShowSuggestions(false)}
+        />
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground uppercase tracking-wider">Name</Label>

@@ -1,17 +1,17 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
+  "projectStateVersion": 5,
   "summary": "Full-stack Smart City Infrastructure Risk Dashboard: a web-based intelligent infrastructure monitoring system for bridges and roads in a city. Uses civil engineering risk formulas (Risk Score = f(Age, Load Factor, Material Factor, Environmental Factor)), ML-based deterioration modeling, GIS heatmap visualization, budget planning, and maintenance year prediction. Tech stack: React + Recharts/Chart.js + Leaflet.js (frontend), Node.js + Express (backend), Python Flask/FastAPI + scikit-learn (ML microservice), PostgreSQL (database). Inspired by government-level smart infrastructure systems like Singapore, Siemens, and Autodesk.",
   "architectural_notes": [
     "Three-tier architecture: React frontend, Node.js/Express backend API, Python ML microservice communicating via REST",
     "PostgreSQL as primary database for infrastructure asset data and historical condition records",
     "ML models: Linear Regression + Random Forest (core), Gradient Boosting (optional); trained on synthetic/simulated structural aging datasets",
     "Risk Score formula: f(Age, Load Factor, Material Factor, Environmental Factor) — civil engineering deterioration model",
-    "Leaflet.js used for GIS heatmap rendering of city infrastructure risk zones"
+    "Leaflet.js used for GIS heatmap rendering of city infrastructure risk zones",
+    "Image upload + AI-based prediction: user uploads infrastructure photo + details, system returns full predicted risk/condition/budget analysis"
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Dark futuristic smart city skyline banner with glowing bridge and road network overlays, electric teal and amber color scheme, suitable for a government dashboard hero header (hero-banner.dim_1400x400.png)\n- Isometric city infrastructure illustration showing bridges, roads, and data nodes with a dark navy background and teal circuit-like overlays (city-infrastructure-iso.dim_800x500.png)\n- Abstract risk heatmap zone graphic with concentric color gradients from red center to green edges on dark background (heatmap-placeholder.dim_600x400.png)\n- Smart city dashboard logo icon — a hexagonal shield with a bridge silhouette and signal/data lines, teal and amber on dark navy (app-logo-icon.dim_128x128.png)",
   "existing_features": [
     {
       "id": "feature-build-a-react-typescript-frontend-dashboard-as-the-main-layout-with-a-top-navigation-bar-app-title-nav-links-a-left-sidebar-for-filters-and-a-main-content-area-the-overall-visual-theme-must-be-a-dark-mode-government-intelligence-aesthetic-inspired-by-singapore-smart-nation-and-siemens-deep-navy-slate-background-electric-teal-and-amber-accent-colors-monospace-data-typography-card-based-panels-with-subtle-glow-borders-and-a-data-dense-professional-layout-apply-this-theme-consistently-across-all-views",
@@ -90,6 +90,30 @@
       "title": "Generate a city infrastructure map background illustration and a dashboard hero banner image for the application.",
       "reqIds": [
         "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-react-query-hook-useanalyzeandpredict-in-frontend-src-hooks-usequeries-ts-that-calls-the-backend-analyzeandpredict-function-with-infrastructure-form-data-including-the-uploaded-photo-base64-string",
+      "title": "Add a React Query hook `useAnalyzeAndPredict` in `frontend/src/hooks/useQueries.ts` that calls the backend `analyzeAndPredict` function with infrastructure form data including the uploaded photo Base64 string.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-new-add-analyze-infrastructure-page-route-add-accessible-from-the-top-navigation-bar-the-page-must-include-a-full-infrastructure-details-form-name-structuretype-area-age-trafficloadfactor-materialtype-environmentalexposurefactor-structuralconditionrating-notes-a-photo-upload-widget-with-drag-and-drop-and-file-picker-support-showing-a-preview-thumbnail-an-analyze-predict-button-that-calls-the-backend-analyzeandpredict-function-and-an-auto-populated-prediction-results-panel-that-appears-after-analysis-showing-risk-score-with-colored-badge-risk-level-health-score-progress-bar-deterioration-rate-forecasted-maintenance-year-estimated-budget-cost-and-recommended-action-a-save-to-database-button-saves-the-record-with-photo-to-the-backend",
+      "title": "Build a new 'Add / Analyze Infrastructure' page (route `/add`) accessible from the top navigation bar. The page must include: a full infrastructure details form (name, structureType, area, age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating, notes), a photo upload widget with drag-and-drop and file-picker support showing a preview thumbnail, an 'Analyze & Predict' button that calls the backend analyzeAndPredict function, and an auto-populated Prediction Results panel that appears after analysis showing: risk score with colored badge, risk level, health score progress bar, deterioration rate, forecasted maintenance year, estimated budget cost, and recommended action. A 'Save to Database' button saves the record (with photo) to the backend.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-existing-infrastructureeditform-component-to-include-a-photo-upload-field-when-a-new-photo-is-uploaded-on-an-existing-record-re-run-the-analyzeandpredict-function-and-show-updated-prediction-suggestions-in-a-side-panel-next-to-the-form-the-user-can-accept-the-suggested-values-auto-fill-form-fields-or-dismiss-them",
+      "title": "Update the existing `InfrastructureEditForm` component to include a photo upload field. When a new photo is uploaded on an existing record, re-run the analyzeAndPredict function and show updated prediction suggestions in a side panel next to the form. The user can accept the suggested values (auto-fill form fields) or dismiss them.",
+      "reqIds": [
+        "REQ-20"
       ],
       "version": 1
     }
@@ -198,6 +222,28 @@
       "summary": "Seed the backend with a synthetic dataset of at least 20 infrastructure records (mix of bridges and roads) across 5 distinct city areas, with varied ages (5–80 years), material types (concrete, steel, asphalt, composite), traffic load factors, environmental exposure levels, and condition ratings. This simulated data must be pre-loaded into stable storage at canister initialization so the dashboard is populated on first load.",
       "reqIds": [
         "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Photo upload feature for bridges and roads: when a user uploads a photo along with full infrastructure details, the system analyzes the image and auto-predicts/fills in risk score, condition rating, deterioration rate, maintenance year, and budget estimate",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add a photo upload field to the infrastructure add/edit form. Accept JPEG/PNG images (max 5MB). Store the uploaded image as a Base64-encoded blob in the backend Infrastructure record by adding an optional `photoBase64: ?Text` field to the Motoko data type. Update `addInfrastructure` and `updateInfrastructure` to accept and persist this field.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Implement a deterministic image-based condition analysis function in Motoko. When a photo is uploaded alongside infrastructure parameters, derive a simulated visual condition score (0.0–5.0) from the Base64 image hash combined with structural parameters (age, materialType, environmentalExposureFactor). Use this derived score to auto-compute and return: riskScore, riskLevel, deteriorationRate, predicted maintenanceYear, and budgetEstimate. Expose this as a query/update function `analyzeAndPredict(record: InfrastructureInput): PredictionResult`.",
+      "reqIds": [
+        "REQ-17"
       ],
       "status": "pending"
     }

@@ -1,350 +1,123 @@
 {
   "kind": "build_request",
-  "title": "Smart City Infrastructure Risk Dashboard",
-  "projectName": "Smart City Risk Dashboard",
+  "title": "Photo Upload with Auto-Prediction for Infrastructure Records",
+  "projectName": "Smart City Infrastructure Dashboard",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create a Motoko backend actor that stores infrastructure records (bridges and roads) with fields: id, name, structureType (bridge/road), location (area/lat/lon), age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating, and notes. Support CRUD operations: addInfrastructure, updateInfrastructure, deleteInfrastructure, getAllInfrastructure, getInfrastructureById.",
+      "id": "REQ-16",
+      "text": "Add a photo upload field to the infrastructure add/edit form. Accept JPEG/PNG images (max 5MB). Store the uploaded image as a Base64-encoded blob in the backend Infrastructure record by adding an optional `photoBase64: ?Text` field to the Motoko data type. Update `addInfrastructure` and `updateInfrastructure` to accept and persist this field.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-latest"
         ],
         "quotes": [
-          "Infrastructure listing dashboard",
-          "Monitors bridges and roads"
+          "whenever i upload the photo and full detail of bridage and road it also predicte the full dtail"
         ]
       },
       "acceptanceCriteria": [
-        "Actor compiles and exposes CRUD query/update functions for infrastructure records",
-        "All fields (age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating) are stored and retrievable",
-        "Infrastructure records persist across canister upgrades"
+        "Infrastructure Motoko type includes an optional `photoBase64: ?Text` field",
+        "addInfrastructure and updateInfrastructure accept the photo blob",
+        "Stored photo can be retrieved via getInfrastructureById"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Implement the civil engineering Risk Index formula entirely in Motoko: RiskScore = (AgeFactor × 0.30) + (TrafficLoadFactor × 0.25) + (MaterialFactor × 0.20) + (EnvironmentalFactor × 0.15) + (InverseConditionRating × 0.10), normalized to a 0–100 scale. Assign risk level categories: Low (0–33), Moderate (34–66), High (67–100). Compute and store riskScore and riskLevel for each infrastructure record on creation and update.",
+      "id": "REQ-17",
+      "text": "Implement a deterministic image-based condition analysis function in Motoko. When a photo is uploaded alongside infrastructure parameters, derive a simulated visual condition score (0.0–5.0) from the Base64 image hash combined with structural parameters (age, materialType, environmentalExposureFactor). Use this derived score to auto-compute and return: riskScore, riskLevel, deteriorationRate, predicted maintenanceYear, and budgetEstimate. Expose this as a query/update function `analyzeAndPredict(record: InfrastructureInput): PredictionResult`.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-latest"
         ],
         "quotes": [
-          "Risk Score = f(Age, Load Factor, Material Factor, Environmental Factor)",
-          "civil engineering principles"
+          "whenever i upload the photo and full detail of bridage and road it also predicte the full dtail"
         ]
       },
       "acceptanceCriteria": [
-        "riskScore is computed and stored for every infrastructure record",
-        "riskLevel correctly maps to Low / Moderate / High based on score",
-        "Formula uses all five engineering input factors with stated weights"
+        "analyzeAndPredict function exists and accepts full infrastructure details including photoBase64",
+        "Returns riskScore, riskLevel, structuralConditionRating (derived), deteriorationRate, maintenanceYear, estimatedCost, and recommendedAction",
+        "The photo hash is incorporated into condition score derivation so different images produce different results",
+        "Results are consistent with the existing risk scoring formula"
       ]
     },
     {
-      "id": "REQ-3",
-      "text": "Implement a deterioration modeling and ML prediction engine in Motoko using a deterministic regression approximation (since Python microservices are not supported). The engine must: (a) compute a deterioration rate per year based on material type, environmental exposure, and traffic load; (b) predict the future condition rating at years +5, +10, +20 using linear and polynomial regression formulas encoded as pure arithmetic; (c) forecast the maintenance year — the year at which the condition rating drops below a critical threshold (rating < 3.0); (d) estimate the deterioration rate as a numeric value. Expose a query function getPredictions(id) returning futureConditionRatings, maintenanceYear, and deteriorationRate.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Predict future condition rating",
-          "Forecast maintenance year",
-          "Estimate deterioration rate",
-          "Linear Regression",
-          "deterioration modeling using regression techniques"
-        ]
-      },
-      "acceptanceCriteria": [
-        "getPredictions returns futureConditionRatings at +5, +10, +20 years for any record",
-        "maintenanceYear is a plausible future year (current year + some offset based on deterioration)",
-        "deteriorationRate is a numeric value reflecting material, load, and environmental factors",
-        "Predictions update when underlying infrastructure record is updated"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Implement a budget estimation module in Motoko. For each infrastructure record, compute an estimated maintenance cost based on: structureType (bridges cost more than roads), riskScore, age, and a base cost constant per structure type. Provide a getBudgetEstimate(id) query returning estimatedCost, urgencyLevel, and recommendedAction (e.g., 'Immediate Repair', 'Schedule Maintenance', 'Monitor Only'). Also provide a getCityBudgetSummary query returning total estimated budget across all structures, breakdown by risk level, and top-5 highest priority structures.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Budget estimation module",
-          "Suggests budget planning for maintenance",
-          "budget planning recommendations"
-        ]
-      },
-      "acceptanceCriteria": [
-        "getBudgetEstimate returns estimatedCost, urgencyLevel, and recommendedAction for any record",
-        "getCityBudgetSummary returns total budget, breakdown by risk category, and top-5 priority list",
-        "Budget scales meaningfully with risk score and structure type"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Seed the backend with a synthetic dataset of at least 20 infrastructure records (mix of bridges and roads) across 5 distinct city areas, with varied ages (5–80 years), material types (concrete, steel, asphalt, composite), traffic load factors, environmental exposure levels, and condition ratings. This simulated data must be pre-loaded into stable storage at canister initialization so the dashboard is populated on first load.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Simulated",
-          "Generated synthetic structural aging data",
-          "Dataset may be"
-        ]
-      },
-      "acceptanceCriteria": [
-        "At least 20 records exist on first canister deploy with no manual data entry",
-        "Records span all 5 city areas, both structure types, and all risk levels",
-        "Seeded data includes realistic coordinate pairs (lat/lon) within a plausible city bounding box"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Build a React + TypeScript frontend dashboard as the main layout with a top navigation bar (app title, nav links), a left sidebar for filters, and a main content area. The overall visual theme must be a dark-mode government intelligence aesthetic inspired by Singapore Smart Nation and Siemens — deep navy/slate background, electric teal and amber accent colors, monospace data typography, card-based panels with subtle glow borders, and a data-dense professional layout. Apply this theme consistently across all views.",
+      "id": "REQ-18",
+      "text": "Add a React Query hook `useAnalyzeAndPredict` in `frontend/src/hooks/useQueries.ts` that calls the backend `analyzeAndPredict` function with infrastructure form data including the uploaded photo Base64 string.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-latest"
         ],
         "quotes": [
-          "government-level smart infrastructure monitoring system",
-          "inspired by smart infrastructure systems used in modern cities like Singapore",
-          "Siemens and Autodesk"
+          "whenever i upload the photo and full detail of bridage and road it also predicte the full dtail"
         ]
       },
       "acceptanceCriteria": [
-        "App has consistent dark-mode navy/slate theme with teal and amber accents",
-        "Top navigation bar and left filter sidebar are present on all main views",
-        "Typography uses a monospace or technical font for data values",
-        "All cards have subtle glow/border treatment consistent with the theme"
+        "useAnalyzeAndPredict hook is exported from useQueries.ts",
+        "It accepts a full infrastructure input object including optional photoBase64",
+        "It calls the backend analyzeAndPredict endpoint and returns typed results"
       ]
     },
     {
-      "id": "REQ-7",
-      "text": "Build an Infrastructure Listing Dashboard page that fetches all infrastructure records from the backend and displays them in a sortable, filterable data table. Each row must show: name, structureType, area, age, riskScore (with colored badge: red/amber/green), riskLevel, healthScore (100 - riskScore as a percentage), maintenanceYear, and an action button to view details. Include a summary stats bar at the top showing total structures, count by risk level, and average health score.",
+      "id": "REQ-19",
+      "text": "Build a new 'Add / Analyze Infrastructure' page (route `/add`) accessible from the top navigation bar. The page must include: a full infrastructure details form (name, structureType, area, age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating, notes), a photo upload widget with drag-and-drop and file-picker support showing a preview thumbnail, an 'Analyze & Predict' button that calls the backend analyzeAndPredict function, and an auto-populated Prediction Results panel that appears after analysis showing: risk score with colored badge, risk level, health score progress bar, deterioration rate, forecasted maintenance year, estimated budget cost, and recommended action. A 'Save to Database' button saves the record (with photo) to the backend.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-latest"
         ],
         "quotes": [
-          "Infrastructure listing dashboard",
-          "Risk index score display",
-          "Health score percentage",
-          "Maintenance year prediction"
+          "whenever i upload the photo and full detail of bridage and road it also predicte the full dtail"
         ]
       },
       "acceptanceCriteria": [
-        "Table displays all 20+ seeded records with all required columns",
-        "Risk badge uses red for High, amber for Moderate, green for Low",
-        "Health score displays as a percentage (0–100%)",
-        "Summary stats bar correctly aggregates total, risk breakdown, and average health score"
+        "Route /add is registered in App.tsx and linked from the top nav bar",
+        "Photo upload widget accepts JPEG/PNG, shows thumbnail preview, and converts image to Base64",
+        "Form validates all required fields before enabling Analyze & Predict",
+        "Clicking Analyze & Predict shows a loading state and then populates the prediction results panel",
+        "Prediction results panel shows riskScore badge, riskLevel, healthScore bar, deteriorationRate, maintenanceYear, estimatedCost, and recommendedAction",
+        "Save to Database button persists the full record including photo and predicted values to the backend",
+        "On successful save, user is redirected to the Infrastructure Detail page for the new record",
+        "Page styling matches the dark-mode government intelligence theme (deep navy, teal/amber accents, monospace typography, glow borders)"
       ]
     },
     {
-      "id": "REQ-8",
-      "text": "Implement a filter panel in the left sidebar that allows filtering the infrastructure list and map by: risk level (Low / Moderate / High / All), structure type (Bridge / Road / All), city area (dropdown with all 5 seeded areas + All), and maintenance urgency (Immediate / Scheduled / Monitor / All). Filters must apply in real-time to both the listing table and the heatmap simultaneously.",
+      "id": "REQ-20",
+      "text": "Update the existing `InfrastructureEditForm` component to include a photo upload field. When a new photo is uploaded on an existing record, re-run the analyzeAndPredict function and show updated prediction suggestions in a side panel next to the form. The user can accept the suggested values (auto-fill form fields) or dismiss them.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-latest"
         ],
         "quotes": [
-          "Filter by: Risk level, Structure type, Area, Maintenance urgency"
+          "whenever i upload the photo and full detail of bridage and road it also predicte the full dtail"
         ]
       },
       "acceptanceCriteria": [
-        "All four filter dimensions are present in the sidebar",
-        "Selecting any filter immediately updates the infrastructure table and map markers",
-        "Multiple filters can be applied simultaneously",
-        "A 'Reset Filters' button restores all defaults"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Build a GIS Heatmap Visualization page using Leaflet.js (react-leaflet) that renders all infrastructure structures as map markers on a city tile map. Each marker must be color-coded by risk level (red = High, orange = Moderate, green = Low). Implement a heatmap overlay layer using Leaflet.heat (leaflet.heat plugin) showing density and severity of risk zones across the city. Clicking a marker opens a popup showing the structure name, type, risk score, health score, and maintenance year.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "GIS heatmap visualization",
-          "Display city map with risk heat zones",
-          "Leaflet.js for heatmap maps",
-          "Visualizes infrastructure health on a heatmap"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Map renders with OpenStreetMap tiles and all infrastructure markers plotted at their lat/lon coordinates",
-        "Markers are color-coded by risk level",
-        "Heatmap overlay layer visualizes risk concentration zones",
-        "Clicking a marker shows a popup with name, type, risk score, health score, and maintenance year",
-        "Filters from the sidebar affect which markers are shown on the map"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Build an Infrastructure Detail page (accessible by clicking a record in the table or map popup) that shows full details for one structure. It must include: all engineering input parameters, risk score with a radial gauge chart, health score as a progress bar, a Recharts line chart showing predicted condition rating over time (+5, +10, +20 years), a deterioration rate indicator, the forecasted maintenance year, budget estimate with recommended action, and an edit form to update the structure's parameters.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Predict future condition rating",
-          "Forecast maintenance year",
-          "infrastructure health score (0–100)",
-          "budget planning recommendations",
-          "deterioration modeling"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Detail page displays all engineering fields and computed metrics",
-        "Recharts line chart shows condition rating trajectory at current, +5, +10, +20 years",
-        "Radial/circular gauge displays risk score 0–100",
-        "Budget estimate and recommended action are shown",
-        "Edit form allows updating parameters and recalculates risk/predictions on save"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Build a Budget Planning page that fetches the city budget summary from the backend and displays: total estimated maintenance budget for the city, a Recharts bar chart showing budget breakdown by risk level, a Recharts pie chart showing budget allocation by structure type (bridges vs roads), a ranked list of top-10 highest-priority structures with their estimated costs and recommended actions, and a budget optimization recommendation section that identifies highest-ROI maintenance targets (highest risk reduction per dollar spent).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Budget estimation module",
-          "Generate budget planning recommendations",
-          "Budget optimization algorithm",
-          "budget planning for maintenance"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Total city maintenance budget is displayed prominently",
-        "Bar chart shows budget by risk level category",
-        "Pie chart shows bridge vs road budget split",
-        "Top-10 priority list is sorted by urgency/cost and shows recommended action",
-        "Budget optimization section highlights highest-priority structures"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Build an Analytics & Comparison page that displays: a Recharts scatter plot of Age vs Risk Score for all structures (colored by structure type), a Recharts bar chart comparing average health scores across city areas, a distribution histogram of health scores across all structures, and an infrastructure comparison table that allows selecting 2–3 structures side-by-side to compare all their metrics, predicted maintenance years, and budget estimates.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Infrastructure comparison analytics",
-          "Data science",
-          "machine learning",
-          "full-stack development"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Scatter plot shows Age vs Risk Score with color encoding for structure type",
-        "Bar chart shows average health score per city area",
-        "Health score distribution histogram is rendered",
-        "Comparison table supports selecting and comparing 2–3 structures side-by-side"
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "text": "Implement a real-time sensor simulation feature on the Infrastructure Detail page. Add a 'Start Sensor Simulation' toggle that, when active, simulates live sensor readings every 3 seconds by slightly randomizing the structural condition rating (±0.1–0.3 range) and traffic load (±5%) and recomputing the risk score and health score in real time on the frontend. Display a live-updating sensor readout panel with animated blinking indicator showing 'LIVE' status.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Real-time sensor simulation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Sensor simulation toggle is present on the detail page",
-        "When active, condition rating and traffic load values update every 3 seconds with small random variations",
-        "Risk score and health score recompute and update in real time on the frontend",
-        "A 'LIVE' blinking indicator is visible when simulation is running",
-        "Stopping the simulation restores the last saved backend values"
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "text": "Create a city infrastructure overview dashboard hero section on the main landing/home page with: a large animated stat counter showing total structures monitored, a risk alert banner highlighting the count of High-risk structures requiring immediate attention, a mini heatmap thumbnail linking to the full map view, a quick-access card grid for the four main sections (Infrastructure List, City Map, Budget Planning, Analytics), and a 'System Status' indicator showing data freshness.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "government-level smart infrastructure monitoring system",
-          "Display city map with risk heat zones",
-          "infrastructure intelligence"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Home page shows animated counters for total structures and high-risk count",
-        "Risk alert banner is visually prominent and shows correct high-risk count",
-        "Quick-access cards navigate correctly to each section",
-        "System status shows last data refresh timestamp"
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "text": "Generate a city infrastructure map background illustration and a dashboard hero banner image for the application.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Display city map with risk heat zones",
-          "government-level smart infrastructure monitoring system"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Hero banner image is used on the home page header",
-        "City illustration is used as a decorative background or map placeholder"
+        "Edit form includes a photo upload field with preview for existing and new photos",
+        "Uploading a new photo triggers analyzeAndPredict and shows a suggestion panel",
+        "Suggestion panel displays predicted riskScore, conditionRating, deteriorationRate, maintenanceYear, and budgetEstimate",
+        "Accept Suggestions button auto-fills form fields with predicted values",
+        "Dismiss button hides the suggestion panel without modifying form fields",
+        "Photo is saved with the updated record on form submission"
       ]
     }
   ],
   "constraints": [
-    "All backend logic must remain in a single Motoko actor — no Python, Node.js, Express, Flask, or external ML microservices",
-    "No PostgreSQL or external databases — all data persisted in Motoko stable storage",
-    "No WebSockets or real-time server push — sensor simulation must run client-side only",
-    "No PDF generation libraries that require Node.js backend",
-    "Do not edit any files under frontend/src/hooks/ or frontend/src/components/ui",
-    "ML predictions must be implemented as deterministic regression arithmetic in Motoko, not via scikit-learn"
+    "All image analysis and prediction logic must be implemented deterministically in Motoko — no external ML microservices or APIs",
+    "Photo data must be stored as Base64 text within the Motoko stable storage — no external file storage",
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
+    "Maintain single-actor Motoko backend architecture"
   ],
   "nonGoals": [
-    "Python Flask/FastAPI ML microservice (not supported on this platform)",
-    "PostgreSQL database integration",
-    "Node.js/Express backend",
-    "Role-based authentication beyond Internet Identity",
-    "Server-side PDF generation and export",
-    "Real external sensor/IoT data ingestion",
-    "Gradient Boosting ML model (beyond platform capabilities)",
-    "GPS/geolocation of the user's device",
-    "External map APIs requiring API keys (use OpenStreetMap tiles only)"
+    "Real computer vision or actual image recognition using ML models",
+    "External image storage services (S3, IPFS, etc.)",
+    "PDF report generation from uploaded photos",
+    "Bulk photo upload for multiple structures at once"
   ],
   "imageRequirements": {
-    "required": [
-      "Dark futuristic smart city skyline banner with glowing bridge and road network overlays, electric teal and amber color scheme, suitable for a government dashboard hero header (hero-banner.dim_1400x400.png)",
-      "Isometric city infrastructure illustration showing bridges, roads, and data nodes with a dark navy background and teal circuit-like overlays (city-infrastructure-iso.dim_800x500.png)",
-      "Abstract risk heatmap zone graphic with concentric color gradients from red center to green edges on dark background (heatmap-placeholder.dim_600x400.png)",
-      "Smart city dashboard logo icon — a hexagonal shield with a bridge silhouette and signal/data lines, teal and amber on dark navy (app-logo-icon.dim_128x128.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

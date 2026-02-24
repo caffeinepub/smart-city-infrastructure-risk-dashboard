@@ -23,16 +23,55 @@ export const StructureType = IDL.Variant({
   'bridge' : IDL.Null,
   'road' : IDL.Null,
 });
-export const RiskLevel = IDL.Variant({
-  'low' : IDL.Null,
-  'high' : IDL.Null,
-  'moderate' : IDL.Null,
-});
 export const MaterialType = IDL.Variant({
   'compositeMaterial' : IDL.Null,
   'concrete' : IDL.Null,
   'asphalt' : IDL.Null,
   'steel' : IDL.Null,
+});
+export const InfrastructureInput = IDL.Record({
+  'id' : IDL.Text,
+  'age' : IDL.Nat,
+  'trafficLoadFactor' : IDL.Float64,
+  'name' : IDL.Text,
+  'structuralConditionRating' : IDL.Float64,
+  'photoBase64' : IDL.Opt(IDL.Text),
+  'environmentalExposureFactor' : IDL.Float64,
+  'notes' : IDL.Text,
+  'structureType' : StructureType,
+  'materialType' : MaterialType,
+  'location' : IDL.Record({
+    'latitude' : IDL.Float64,
+    'area' : IDL.Text,
+    'longitude' : IDL.Float64,
+  }),
+});
+export const UrgencyLevel = IDL.Variant({
+  'immediateRepair' : IDL.Null,
+  'monitorOnly' : IDL.Null,
+  'scheduledMaintenance' : IDL.Null,
+});
+export const BudgetEstimate = IDL.Record({
+  'urgencyLevel' : UrgencyLevel,
+  'recommendedAction' : IDL.Text,
+  'estimatedCost' : IDL.Float64,
+});
+export const RiskLevel = IDL.Variant({
+  'low' : IDL.Null,
+  'high' : IDL.Null,
+  'moderate' : IDL.Null,
+});
+export const PredictionResult = IDL.Record({
+  'deteriorationRate' : IDL.Float64,
+  'maintenanceYear' : IDL.Nat,
+  'budgetEstimate' : BudgetEstimate,
+  'riskLevel' : RiskLevel,
+  'riskScore' : IDL.Float64,
+});
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
 });
 export const Infrastructure = IDL.Record({
   'id' : IDL.Text,
@@ -40,6 +79,7 @@ export const Infrastructure = IDL.Record({
   'trafficLoadFactor' : IDL.Float64,
   'name' : IDL.Text,
   'structuralConditionRating' : IDL.Float64,
+  'photoBase64' : IDL.Opt(IDL.Text),
   'environmentalExposureFactor' : IDL.Float64,
   'notes' : IDL.Text,
   'structureType' : StructureType,
@@ -52,16 +92,7 @@ export const Infrastructure = IDL.Record({
   }),
   'riskScore' : IDL.Float64,
 });
-export const UrgencyLevel = IDL.Variant({
-  'immediateRepair' : IDL.Null,
-  'monitorOnly' : IDL.Null,
-  'scheduledMaintenance' : IDL.Null,
-});
-export const BudgetEstimate = IDL.Record({
-  'urgencyLevel' : UrgencyLevel,
-  'recommendedAction' : IDL.Text,
-  'estimatedCost' : IDL.Float64,
-});
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const CityBudgetSummary = IDL.Record({
   'breakdownByRiskLevel' : IDL.Record({
     'low' : IDL.Float64,
@@ -108,14 +139,31 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-  'addInfrastructure' : IDL.Func([Infrastructure], [], []),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addInfrastructure' : IDL.Func([InfrastructureInput], [], []),
+  'analyzeAndPredict' : IDL.Func(
+      [InfrastructureInput],
+      [PredictionResult],
+      ['query'],
+    ),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'deleteInfrastructure' : IDL.Func([IDL.Text], [], []),
   'getAllInfrastructure' : IDL.Func([], [IDL.Vec(Infrastructure)], ['query']),
   'getBudgetEstimate' : IDL.Func([IDL.Text], [BudgetEstimate], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getCityBudgetSummary' : IDL.Func([], [CityBudgetSummary], ['query']),
   'getInfrastructureById' : IDL.Func([IDL.Text], [Infrastructure], ['query']),
   'getPredictions' : IDL.Func([IDL.Text], [Prediction], ['query']),
-  'updateInfrastructure' : IDL.Func([IDL.Text, Infrastructure], [], []),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'initializeData' : IDL.Func([], [], []),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'updateInfrastructure' : IDL.Func([IDL.Text, InfrastructureInput], [], []),
 });
 
 export const idlInitArgs = [];
@@ -133,16 +181,55 @@ export const idlFactory = ({ IDL }) => {
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
   const StructureType = IDL.Variant({ 'bridge' : IDL.Null, 'road' : IDL.Null });
-  const RiskLevel = IDL.Variant({
-    'low' : IDL.Null,
-    'high' : IDL.Null,
-    'moderate' : IDL.Null,
-  });
   const MaterialType = IDL.Variant({
     'compositeMaterial' : IDL.Null,
     'concrete' : IDL.Null,
     'asphalt' : IDL.Null,
     'steel' : IDL.Null,
+  });
+  const InfrastructureInput = IDL.Record({
+    'id' : IDL.Text,
+    'age' : IDL.Nat,
+    'trafficLoadFactor' : IDL.Float64,
+    'name' : IDL.Text,
+    'structuralConditionRating' : IDL.Float64,
+    'photoBase64' : IDL.Opt(IDL.Text),
+    'environmentalExposureFactor' : IDL.Float64,
+    'notes' : IDL.Text,
+    'structureType' : StructureType,
+    'materialType' : MaterialType,
+    'location' : IDL.Record({
+      'latitude' : IDL.Float64,
+      'area' : IDL.Text,
+      'longitude' : IDL.Float64,
+    }),
+  });
+  const UrgencyLevel = IDL.Variant({
+    'immediateRepair' : IDL.Null,
+    'monitorOnly' : IDL.Null,
+    'scheduledMaintenance' : IDL.Null,
+  });
+  const BudgetEstimate = IDL.Record({
+    'urgencyLevel' : UrgencyLevel,
+    'recommendedAction' : IDL.Text,
+    'estimatedCost' : IDL.Float64,
+  });
+  const RiskLevel = IDL.Variant({
+    'low' : IDL.Null,
+    'high' : IDL.Null,
+    'moderate' : IDL.Null,
+  });
+  const PredictionResult = IDL.Record({
+    'deteriorationRate' : IDL.Float64,
+    'maintenanceYear' : IDL.Nat,
+    'budgetEstimate' : BudgetEstimate,
+    'riskLevel' : RiskLevel,
+    'riskScore' : IDL.Float64,
+  });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
   });
   const Infrastructure = IDL.Record({
     'id' : IDL.Text,
@@ -150,6 +237,7 @@ export const idlFactory = ({ IDL }) => {
     'trafficLoadFactor' : IDL.Float64,
     'name' : IDL.Text,
     'structuralConditionRating' : IDL.Float64,
+    'photoBase64' : IDL.Opt(IDL.Text),
     'environmentalExposureFactor' : IDL.Float64,
     'notes' : IDL.Text,
     'structureType' : StructureType,
@@ -162,16 +250,7 @@ export const idlFactory = ({ IDL }) => {
     }),
     'riskScore' : IDL.Float64,
   });
-  const UrgencyLevel = IDL.Variant({
-    'immediateRepair' : IDL.Null,
-    'monitorOnly' : IDL.Null,
-    'scheduledMaintenance' : IDL.Null,
-  });
-  const BudgetEstimate = IDL.Record({
-    'urgencyLevel' : UrgencyLevel,
-    'recommendedAction' : IDL.Text,
-    'estimatedCost' : IDL.Float64,
-  });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const CityBudgetSummary = IDL.Record({
     'breakdownByRiskLevel' : IDL.Record({
       'low' : IDL.Float64,
@@ -218,14 +297,31 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-    'addInfrastructure' : IDL.Func([Infrastructure], [], []),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addInfrastructure' : IDL.Func([InfrastructureInput], [], []),
+    'analyzeAndPredict' : IDL.Func(
+        [InfrastructureInput],
+        [PredictionResult],
+        ['query'],
+      ),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'deleteInfrastructure' : IDL.Func([IDL.Text], [], []),
     'getAllInfrastructure' : IDL.Func([], [IDL.Vec(Infrastructure)], ['query']),
     'getBudgetEstimate' : IDL.Func([IDL.Text], [BudgetEstimate], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getCityBudgetSummary' : IDL.Func([], [CityBudgetSummary], ['query']),
     'getInfrastructureById' : IDL.Func([IDL.Text], [Infrastructure], ['query']),
     'getPredictions' : IDL.Func([IDL.Text], [Prediction], ['query']),
-    'updateInfrastructure' : IDL.Func([IDL.Text, Infrastructure], [], []),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'initializeData' : IDL.Func([], [], []),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'updateInfrastructure' : IDL.Func([IDL.Text, InfrastructureInput], [], []),
   });
 };
 
