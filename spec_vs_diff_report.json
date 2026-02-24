@@ -1,0 +1,120 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-24T20:58:34.138Z",
+  "summary": "The diff implements most of the required features across backend (Motoko actor) and frontend (React/TypeScript). However, several specific requirements have gaps or are only partially addressed based on the visible truncated diff.",
+  "missing_requirements": [
+    {
+      "requirement": "REQ-2: MaterialFactor (weighted 0.20) must be included in the Risk Index formula. The visible calculateRiskScore function in main.mo only includes ageFactor, trafficLoadFactor, environmentalExposureFactor, and inverseConditionRating — the materialType factor with weight 0.20 appears absent.",
+      "reason": "The visible backend calculateRiskScore function omits the materialFactor term, meaning only 4 of 5 required weighted inputs are used and the formula does not match the spec.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "requirement": "REQ-5: At least 20 infrastructure records seeded across 5 distinct city areas with varied ages, material types, and risk levels.",
+      "reason": "Only 2 synthetic records are visible in the truncated diff (Central Bridge and Riverside Road). The file is truncated so full compliance cannot be confirmed.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "requirement": "REQ-7: maintenanceYear in the table must use the backend-computed forecast year (when condition drops below 3.0 from getPredictions), not a frontend calculation.",
+      "reason": "InfrastructureTable and InfrastructureMap compute maintYear as currentYear + Number(infra.age) on the frontend, ignoring the deterioration-based maintenanceYear from the backend getPredictions function.",
+      "evidence": [
+        "frontend/src/components/InfrastructureTable.tsx",
+        "frontend/src/components/InfrastructureComparison.tsx",
+        "frontend/src/components/InfrastructureMap.tsx"
+      ]
+    },
+    {
+      "requirement": "REQ-13: Real-time sensor simulation feature on the Infrastructure Detail page with a Start Sensor Simulation toggle, 3-second interval updates to condition rating and traffic load, frontend risk recomputation, and a LIVE blinking indicator.",
+      "reason": "No sensor simulation component, toggle, interval logic, or LIVE indicator is present anywhere in the visible diff files.",
+      "evidence": []
+    },
+    {
+      "requirement": "REQ-14: Mini heatmap thumbnail on the home page linking to the full map view.",
+      "reason": "The HeroSection component contains stat counters and a risk alert banner but no mini map thumbnail or link to the map view.",
+      "evidence": [
+        "frontend/src/components/HeroSection.tsx"
+      ]
+    },
+    {
+      "requirement": "REQ-14: Quick-access card grid for the four main sections (Infrastructure List, City Map, Budget Planning, Analytics) on the home page.",
+      "reason": "No quick-access card grid is visible in HeroSection or any other shown component. The Dashboard page file is not in the visible diff.",
+      "evidence": [
+        "frontend/src/components/HeroSection.tsx"
+      ]
+    },
+    {
+      "requirement": "REQ-15: Required images (hero-banner.dim_1400x400.png, city-infrastructure-iso.dim_800x500.png, heatmap-placeholder.dim_600x400.png, app-logo-icon.dim_128x128.png) must be generated and present.",
+      "reason": "No image asset files appear in the shown added files. The diff notes 21 added files were omitted due to limits so images may exist but cannot be confirmed.",
+      "evidence": [
+        "frontend/src/components/HeroSection.tsx",
+        "frontend/src/components/Layout.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Frontend-side budget cost estimation logic duplicated in BudgetByTypeChart, BudgetOptimization, and PriorityList using a local estimateCost function instead of calling the backend getBudgetEstimate query.",
+      "reason": "The spec requires budget estimates to originate from the Motoko backend getBudgetEstimate function. These components implement their own cost arithmetic on the frontend, bypassing the backend module.",
+      "evidence": [
+        "frontend/src/components/BudgetByTypeChart.tsx",
+        "frontend/src/components/BudgetOptimization.tsx",
+        "frontend/src/components/PriorityList.tsx"
+      ]
+    },
+    {
+      "description": "A numeric ROI index formula (riskScore * 100) / (cost / 10000) is computed and displayed in BudgetOptimization.",
+      "reason": "The spec mentions highest-ROI targets as a concept but does not define a specific numeric ROI index formula. This specific calculation was not requested.",
+      "evidence": [
+        "frontend/src/components/BudgetOptimization.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.62,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AgeRiskScatterPlot.tsx",
+    "frontend/src/components/AnimatedCounter.tsx",
+    "frontend/src/components/AreaHealthChart.tsx",
+    "frontend/src/components/BudgetByRiskChart.tsx",
+    "frontend/src/components/BudgetByTypeChart.tsx",
+    "frontend/src/components/BudgetOptimization.tsx",
+    "frontend/src/components/ConditionChart.tsx",
+    "frontend/src/components/FilterPanel.tsx",
+    "frontend/src/components/HealthDistributionHistogram.tsx",
+    "frontend/src/components/HeroSection.tsx",
+    "frontend/src/components/InfrastructureComparison.tsx",
+    "frontend/src/components/InfrastructureEditForm.tsx",
+    "frontend/src/components/InfrastructureMap.tsx",
+    "frontend/src/components/InfrastructureTable.tsx",
+    "frontend/src/components/Layout.tsx",
+    "frontend/src/components/PriorityList.tsx",
+    "frontend/src/components/RiskBadge.tsx",
+    "frontend/src/components/RiskGauge.tsx",
+    "frontend/src/components/SensorSimulation.tsx",
+    "frontend/src/components/SummaryStats.tsx",
+    "frontend/src/contexts/FilterContext.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/hooks/useSensorSimulation.ts",
+    "frontend/src/index.css",
+    "frontend/src/lib/utils.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/Analytics.tsx",
+    "frontend/src/pages/BudgetPlanning.tsx",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/pages/InfrastructureDetail.tsx",
+    "frontend/src/pages/MapView.tsx",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

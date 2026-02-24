@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    /* Light mode - not primary but kept for compatibility */
+    --background: 0.97 0.005 240;
+    --foreground: 0.15 0.02 240;
+    --card: 1 0 0;
+    --card-foreground: 0.15 0.02 240;
+    --popover: 1 0 0;
+    --popover-foreground: 0.15 0.02 240;
+    --primary: 0.65 0.18 195;
+    --primary-foreground: 0.98 0 0;
+    --secondary: 0.93 0.01 240;
+    --secondary-foreground: 0.15 0.02 240;
+    --muted: 0.93 0.01 240;
+    --muted-foreground: 0.5 0.02 240;
+    --accent: 0.93 0.01 240;
+    --accent-foreground: 0.15 0.02 240;
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 0.98 0 0;
+    --border: 0.88 0.01 240;
+    --input: 0.88 0.01 240;
+    --ring: 0.65 0.18 195;
+    --chart-1: 0.65 0.18 195;
+    --chart-2: 0.75 0.16 85;
+    --chart-3: 0.55 0.22 25;
+    --chart-4: 0.6 0.2 145;
+    --chart-5: 0.7 0.15 260;
+    --sidebar: 0.95 0.01 240;
+    --sidebar-foreground: 0.15 0.02 240;
+    --sidebar-primary: 0.65 0.18 195;
+    --sidebar-primary-foreground: 0.98 0 0;
+    --sidebar-accent: 0.9 0.01 240;
+    --sidebar-accent-foreground: 0.15 0.02 240;
+    --sidebar-border: 0.88 0.01 240;
+    --sidebar-ring: 0.65 0.18 195;
+  }
+
+  .dark {
+    /* Dark navy/slate government intelligence theme */
+    --background: 0.12 0.02 240;
+    --foreground: 0.92 0.01 200;
+    --card: 0.16 0.025 240;
+    --card-foreground: 0.92 0.01 200;
+    --popover: 0.18 0.025 240;
+    --popover-foreground: 0.92 0.01 200;
+    --primary: 0.72 0.18 195;
+    --primary-foreground: 0.1 0.02 240;
+    --secondary: 0.22 0.03 240;
+    --secondary-foreground: 0.92 0.01 200;
+    --muted: 0.2 0.025 240;
+    --muted-foreground: 0.58 0.02 220;
+    --accent: 0.25 0.03 240;
+    --accent-foreground: 0.92 0.01 200;
+    --destructive: 0.6 0.22 25;
+    --destructive-foreground: 0.98 0 0;
+    --border: 0.28 0.03 240;
+    --input: 0.22 0.03 240;
+    --ring: 0.72 0.18 195;
+    --chart-1: 0.72 0.18 195;
+    --chart-2: 0.78 0.16 85;
+    --chart-3: 0.6 0.22 25;
+    --chart-4: 0.65 0.2 145;
+    --chart-5: 0.7 0.15 260;
+    --sidebar: 0.14 0.022 240;
+    --sidebar-foreground: 0.92 0.01 200;
+    --sidebar-primary: 0.72 0.18 195;
+    --sidebar-primary-foreground: 0.1 0.02 240;
+    --sidebar-accent: 0.2 0.025 240;
+    --sidebar-accent-foreground: 0.92 0.01 200;
+    --sidebar-border: 0.28 0.03 240;
+    --sidebar-ring: 0.72 0.18 195;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-mono-data {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  .card-glow {
+    box-shadow: 0 0 0 1px oklch(0.72 0.18 195 / 0.2), 0 4px 24px oklch(0.72 0.18 195 / 0.08);
+  }
+
+  .card-glow-amber {
+    box-shadow: 0 0 0 1px oklch(0.78 0.16 85 / 0.3), 0 4px 24px oklch(0.78 0.16 85 / 0.1);
+  }
+
+  .card-glow-red {
+    box-shadow: 0 0 0 1px oklch(0.6 0.22 25 / 0.3), 0 4px 24px oklch(0.6 0.22 25 / 0.1);
+  }
+
+  .teal-border {
+    border-color: oklch(0.72 0.18 195 / 0.4);
+  }
+
+  .text-teal {
+    color: oklch(0.72 0.18 195);
+  }
+
+  .text-amber-accent {
+    color: oklch(0.78 0.16 85);
+  }
+
+  .bg-teal-glow {
+    background: oklch(0.72 0.18 195 / 0.1);
+  }
+
+  .bg-amber-glow {
+    background: oklch(0.78 0.16 85 / 0.1);
+  }
+
+  .bg-red-glow {
+    background: oklch(0.6 0.22 25 / 0.1);
+  }
+
+  .live-pulse {
+    animation: live-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .scan-line {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      oklch(0.72 0.18 195 / 0.05) 50%,
+      transparent 100%
+    );
+    animation: scan 3s linear infinite;
+  }
+
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  .nav-link-active {
+    color: oklch(0.72 0.18 195);
+    border-bottom: 2px solid oklch(0.72 0.18 195);
+  }
+}
+
+/* Leaflet overrides for dark theme */
+.leaflet-container {
+  background: oklch(0.12 0.02 240) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: oklch(0.16 0.025 240) !important;
+  color: oklch(0.92 0.01 200) !important;
+  border: 1px solid oklch(0.72 0.18 195 / 0.3) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 20px oklch(0.72 0.18 195 / 0.2) !important;
+}
+
+.leaflet-popup-tip {
+  background: oklch(0.16 0.025 240) !important;
+}
+
+.leaflet-popup-close-button {
+  color: oklch(0.72 0.18 195) !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.14 0.022 240);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.28 0.03 240);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.72 0.18 195 / 0.5);
+}

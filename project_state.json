@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Full-stack Smart City Infrastructure Risk Dashboard: a web-based intelligent infrastructure monitoring system for bridges and roads in a city. Uses civil engineering risk formulas (Risk Score = f(Age, Load Factor, Material Factor, Environmental Factor)), ML-based deterioration modeling, GIS heatmap visualization, budget planning, and maintenance year prediction. Tech stack: React + Recharts/Chart.js + Leaflet.js (frontend), Node.js + Express (backend), Python Flask/FastAPI + scikit-learn (ML microservice), PostgreSQL (database). Inspired by government-level smart infrastructure systems like Singapore, Siemens, and Autodesk.",
+  "architectural_notes": [
+    "Three-tier architecture: React frontend, Node.js/Express backend API, Python ML microservice communicating via REST",
+    "PostgreSQL as primary database for infrastructure asset data and historical condition records",
+    "ML models: Linear Regression + Random Forest (core), Gradient Boosting (optional); trained on synthetic/simulated structural aging datasets",
+    "Risk Score formula: f(Age, Load Factor, Material Factor, Environmental Factor) — civil engineering deterioration model",
+    "Leaflet.js used for GIS heatmap rendering of city infrastructure risk zones"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Dark futuristic smart city skyline banner with glowing bridge and road network overlays, electric teal and amber color scheme, suitable for a government dashboard hero header (hero-banner.dim_1400x400.png)\n- Isometric city infrastructure illustration showing bridges, roads, and data nodes with a dark navy background and teal circuit-like overlays (city-infrastructure-iso.dim_800x500.png)\n- Abstract risk heatmap zone graphic with concentric color gradients from red center to green edges on dark background (heatmap-placeholder.dim_600x400.png)\n- Smart city dashboard logo icon — a hexagonal shield with a bridge silhouette and signal/data lines, teal and amber on dark navy (app-logo-icon.dim_128x128.png)",
+  "existing_features": [
+    {
+      "id": "feature-build-a-react-typescript-frontend-dashboard-as-the-main-layout-with-a-top-navigation-bar-app-title-nav-links-a-left-sidebar-for-filters-and-a-main-content-area-the-overall-visual-theme-must-be-a-dark-mode-government-intelligence-aesthetic-inspired-by-singapore-smart-nation-and-siemens-deep-navy-slate-background-electric-teal-and-amber-accent-colors-monospace-data-typography-card-based-panels-with-subtle-glow-borders-and-a-data-dense-professional-layout-apply-this-theme-consistently-across-all-views",
+      "title": "Build a React + TypeScript frontend dashboard as the main layout with a top navigation bar (app title, nav links), a left sidebar for filters, and a main content area. The overall visual theme must be a dark-mode government intelligence aesthetic inspired by Singapore Smart Nation and Siemens — deep navy/slate background, electric teal and amber accent colors, monospace data typography, card-based panels with subtle glow borders, and a data-dense professional layout. Apply this theme consistently across all views.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-infrastructure-listing-dashboard-page-that-fetches-all-infrastructure-records-from-the-backend-and-displays-them-in-a-sortable-filterable-data-table-each-row-must-show-name-structuretype-area-age-riskscore-with-colored-badge-red-amber-green-risklevel-healthscore-100-riskscore-as-a-percentage-maintenanceyear-and-an-action-button-to-view-details-include-a-summary-stats-bar-at-the-top-showing-total-structures-count-by-risk-level-and-average-health-score",
+      "title": "Build an Infrastructure Listing Dashboard page that fetches all infrastructure records from the backend and displays them in a sortable, filterable data table. Each row must show: name, structureType, area, age, riskScore (with colored badge: red/amber/green), riskLevel, healthScore (100 - riskScore as a percentage), maintenanceYear, and an action button to view details. Include a summary stats bar at the top showing total structures, count by risk level, and average health score.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-filter-panel-in-the-left-sidebar-that-allows-filtering-the-infrastructure-list-and-map-by-risk-level-low-moderate-high-all-structure-type-bridge-road-all-city-area-dropdown-with-all-5-seeded-areas-all-and-maintenance-urgency-immediate-scheduled-monitor-all-filters-must-apply-in-real-time-to-both-the-listing-table-and-the-heatmap-simultaneously",
+      "title": "Implement a filter panel in the left sidebar that allows filtering the infrastructure list and map by: risk level (Low / Moderate / High / All), structure type (Bridge / Road / All), city area (dropdown with all 5 seeded areas + All), and maintenance urgency (Immediate / Scheduled / Monitor / All). Filters must apply in real-time to both the listing table and the heatmap simultaneously.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-gis-heatmap-visualization-page-using-leaflet-js-react-leaflet-that-renders-all-infrastructure-structures-as-map-markers-on-a-city-tile-map-each-marker-must-be-color-coded-by-risk-level-red-high-orange-moderate-green-low-implement-a-heatmap-overlay-layer-using-leaflet-heat-leaflet-heat-plugin-showing-density-and-severity-of-risk-zones-across-the-city-clicking-a-marker-opens-a-popup-showing-the-structure-name-type-risk-score-health-score-and-maintenance-year",
+      "title": "Build a GIS Heatmap Visualization page using Leaflet.js (react-leaflet) that renders all infrastructure structures as map markers on a city tile map. Each marker must be color-coded by risk level (red = High, orange = Moderate, green = Low). Implement a heatmap overlay layer using Leaflet.heat (leaflet.heat plugin) showing density and severity of risk zones across the city. Clicking a marker opens a popup showing the structure name, type, risk score, health score, and maintenance year.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-infrastructure-detail-page-accessible-by-clicking-a-record-in-the-table-or-map-popup-that-shows-full-details-for-one-structure-it-must-include-all-engineering-input-parameters-risk-score-with-a-radial-gauge-chart-health-score-as-a-progress-bar-a-recharts-line-chart-showing-predicted-condition-rating-over-time-5-10-20-years-a-deterioration-rate-indicator-the-forecasted-maintenance-year-budget-estimate-with-recommended-action-and-an-edit-form-to-update-the-structure-s-parameters",
+      "title": "Build an Infrastructure Detail page (accessible by clicking a record in the table or map popup) that shows full details for one structure. It must include: all engineering input parameters, risk score with a radial gauge chart, health score as a progress bar, a Recharts line chart showing predicted condition rating over time (+5, +10, +20 years), a deterioration rate indicator, the forecasted maintenance year, budget estimate with recommended action, and an edit form to update the structure's parameters.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-budget-planning-page-that-fetches-the-city-budget-summary-from-the-backend-and-displays-total-estimated-maintenance-budget-for-the-city-a-recharts-bar-chart-showing-budget-breakdown-by-risk-level-a-recharts-pie-chart-showing-budget-allocation-by-structure-type-bridges-vs-roads-a-ranked-list-of-top-10-highest-priority-structures-with-their-estimated-costs-and-recommended-actions-and-a-budget-optimization-recommendation-section-that-identifies-highest-roi-maintenance-targets-highest-risk-reduction-per-dollar-spent",
+      "title": "Build a Budget Planning page that fetches the city budget summary from the backend and displays: total estimated maintenance budget for the city, a Recharts bar chart showing budget breakdown by risk level, a Recharts pie chart showing budget allocation by structure type (bridges vs roads), a ranked list of top-10 highest-priority structures with their estimated costs and recommended actions, and a budget optimization recommendation section that identifies highest-ROI maintenance targets (highest risk reduction per dollar spent).",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-analytics-comparison-page-that-displays-a-recharts-scatter-plot-of-age-vs-risk-score-for-all-structures-colored-by-structure-type-a-recharts-bar-chart-comparing-average-health-scores-across-city-areas-a-distribution-histogram-of-health-scores-across-all-structures-and-an-infrastructure-comparison-table-that-allows-selecting-2-3-structures-side-by-side-to-compare-all-their-metrics-predicted-maintenance-years-and-budget-estimates",
+      "title": "Build an Analytics & Comparison page that displays: a Recharts scatter plot of Age vs Risk Score for all structures (colored by structure type), a Recharts bar chart comparing average health scores across city areas, a distribution histogram of health scores across all structures, and an infrastructure comparison table that allows selecting 2–3 structures side-by-side to compare all their metrics, predicted maintenance years, and budget estimates.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-real-time-sensor-simulation-feature-on-the-infrastructure-detail-page-add-a-start-sensor-simulation-toggle-that-when-active-simulates-live-sensor-readings-every-3-seconds-by-slightly-randomizing-the-structural-condition-rating-0-1-0-3-range-and-traffic-load-5-and-recomputing-the-risk-score-and-health-score-in-real-time-on-the-frontend-display-a-live-updating-sensor-readout-panel-with-animated-blinking-indicator-showing-live-status",
+      "title": "Implement a real-time sensor simulation feature on the Infrastructure Detail page. Add a 'Start Sensor Simulation' toggle that, when active, simulates live sensor readings every 3 seconds by slightly randomizing the structural condition rating (±0.1–0.3 range) and traffic load (±5%) and recomputing the risk score and health score in real time on the frontend. Display a live-updating sensor readout panel with animated blinking indicator showing 'LIVE' status.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-city-infrastructure-overview-dashboard-hero-section-on-the-main-landing-home-page-with-a-large-animated-stat-counter-showing-total-structures-monitored-a-risk-alert-banner-highlighting-the-count-of-high-risk-structures-requiring-immediate-attention-a-mini-heatmap-thumbnail-linking-to-the-full-map-view-a-quick-access-card-grid-for-the-four-main-sections-infrastructure-list-city-map-budget-planning-analytics-and-a-system-status-indicator-showing-data-freshness",
+      "title": "Create a city infrastructure overview dashboard hero section on the main landing/home page with: a large animated stat counter showing total structures monitored, a risk alert banner highlighting the count of High-risk structures requiring immediate attention, a mini heatmap thumbnail linking to the full map view, a quick-access card grid for the four main sections (Infrastructure List, City Map, Budget Planning, Analytics), and a 'System Status' indicator showing data freshness.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-a-city-infrastructure-map-background-illustration-and-a-dashboard-hero-banner-image-for-the-application",
+      "title": "Generate a city infrastructure map background illustration and a dashboard hero banner image for the application.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Infrastructure listing dashboard with risk index score, health score %, and maintenance year prediction",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Civil engineering Risk Index formula: Risk Score = f(Age, Load Factor, Material Factor, Environmental Factor) with deterioration modeling via regression",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "ML microservice (Python Flask/FastAPI + scikit-learn) for predicting future condition rating, maintenance year, and deterioration rate using Linear Regression and Random Forest (+ optional Gradient Boosting)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "GIS heatmap visualization using Leaflet.js showing city map with risk heat zones",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Budget estimation module with budget planning recommendations for infrastructure maintenance",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Filtering system by risk level, structure type (bridge/road), area, and maintenance urgency",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Synthetic/simulated infrastructure dataset generation for structural aging data",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Real-time sensor simulation (optional advanced feature)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Role-based admin dashboard (optional advanced feature)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "PDF infrastructure health report generation (optional advanced feature)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Infrastructure comparison analytics and budget optimization algorithm (optional advanced features)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Create a Motoko backend actor that stores infrastructure records (bridges and roads) with fields: id, name, structureType (bridge/road), location (area/lat/lon), age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating, and notes. Support CRUD operations: addInfrastructure, updateInfrastructure, deleteInfrastructure, getAllInfrastructure, getInfrastructureById.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Implement the civil engineering Risk Index formula entirely in Motoko: RiskScore = (AgeFactor × 0.30) + (TrafficLoadFactor × 0.25) + (MaterialFactor × 0.20) + (EnvironmentalFactor × 0.15) + (InverseConditionRating × 0.10), normalized to a 0–100 scale. Assign risk level categories: Low (0–33), Moderate (34–66), High (67–100). Compute and store riskScore and riskLevel for each infrastructure record on creation and update.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Implement a deterioration modeling and ML prediction engine in Motoko using a deterministic regression approximation (since Python microservices are not supported). The engine must: (a) compute a deterioration rate per year based on material type, environmental exposure, and traffic load; (b) predict the future condition rating at years +5, +10, +20 using linear and polynomial regression formulas encoded as pure arithmetic; (c) forecast the maintenance year — the year at which the condition rating drops below a critical threshold (rating < 3.0); (d) estimate the deterioration rate as a numeric value. Expose a query function getPredictions(id) returning futureConditionRatings, maintenanceYear, and deteriorationRate.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Implement a budget estimation module in Motoko. For each infrastructure record, compute an estimated maintenance cost based on: structureType (bridges cost more than roads), riskScore, age, and a base cost constant per structure type. Provide a getBudgetEstimate(id) query returning estimatedCost, urgencyLevel, and recommendedAction (e.g., 'Immediate Repair', 'Schedule Maintenance', 'Monitor Only'). Also provide a getCityBudgetSummary query returning total estimated budget across all structures, breakdown by risk level, and top-5 highest priority structures.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Seed the backend with a synthetic dataset of at least 20 infrastructure records (mix of bridges and roads) across 5 distinct city areas, with varied ages (5–80 years), material types (concrete, steel, asphalt, composite), traffic load factors, environmental exposure levels, and condition ratings. This simulated data must be pre-loaded into stable storage at canister initialization so the dashboard is populated on first load.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Smart City Infrastructure Risk Dashboard",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

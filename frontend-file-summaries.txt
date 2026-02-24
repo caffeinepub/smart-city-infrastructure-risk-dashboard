@@ -1,0 +1,10 @@
+{
+  "frontend/index.html": "HTML entry point with Leaflet CSS/JS and leaflet.heat loaded via CDN script tags before the React app.",
+  "frontend/src/App.tsx": "Main application component using TanStack Router with routes for Dashboard, MapView, BudgetPlanning, Analytics, and InfrastructureDetail, all wrapped in the Layout component via a root route with Outlet.",
+  "frontend/src/components/InfrastructureMap.tsx": "Leaflet map component using CDN-loaded Leaflet (window.L) with `any` types instead of `import('leaflet')` type references, rendering color-coded markers and heatmap overlay for infrastructure data.",
+  "frontend/src/pages/Dashboard.tsx": "Main dashboard page showing the hero section with animated counters, summary stats, and a filterable/sortable infrastructure table with footer attribution.",
+  "frontend/src/pages/MapView.tsx": "GIS map page rendering the Leaflet heatmap with filtered infrastructure markers, legend, and city illustration, with a loading placeholder image.",
+  "frontend/src/pages/BudgetPlanning.tsx": "Budget planning page displaying total city maintenance budget, risk-level breakdown charts, structure-type pie chart, top-10 priority list, and ROI optimization recommendations.",
+  "frontend/src/pages/Analytics.tsx": "Analytics page with scatter plot (Age vs Risk), area health bar chart, health distribution histogram, and side-by-side infrastructure comparison tool.",
+  "frontend/src/pages/InfrastructureDetail.tsx": "Detail page for a single infrastructure record showing risk gauge, health score, engineering parameters, condition forecast chart, maintenance year prediction, sensor simulation panel, and an editable parameter form."
+}

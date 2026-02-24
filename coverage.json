@@ -1,0 +1,363 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-24T20:58:34.141Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 15,
+    "implemented": 10,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Create a Motoko backend actor that stores infrastructure records (bridges and roads) with fields: id, name, structureType (bridge/road), location (area/lat/lon), age, trafficLoadFactor, materialType, environmentalExposureFactor, structuralConditionRating, and notes. Support CRUD operations: addInfrastructure, updateInfrastructure, deleteInfrastructure, getAllInfrastructure, getInfrastructureById.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-10",
+        "summary": "Build an Infrastructure Detail page (accessible by clicking a record in the table or map popup) that shows full details for one structure. It must include: all engineering input parameters, risk score with a radial gauge chart, health score as a progress bar, a Recharts line chart showing predicted condition rating over time (+5, +10, +20 years), a deterioration rate indicator, the forecasted maintenance year, budget estimate with recommended action, and an edit form to update the structure's parameters.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useInfrastructureDetail.ts",
+          "frontend/src/components/RiskGauge.tsx",
+          "frontend/src/components/ConditionChart.tsx",
+          "frontend/src/components/InfrastructureEditForm.tsx",
+          "frontend/src/pages/InfrastructureDetail.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/RiskGauge.tsx",
+          "frontend/src/components/ConditionChart.tsx",
+          "frontend/src/components/InfrastructureEditForm.tsx",
+          "frontend/src/pages/InfrastructureDetail.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-11",
+        "summary": "Build a Budget Planning page that fetches the city budget summary from the backend and displays: total estimated maintenance budget for the city, a Recharts bar chart showing budget breakdown by risk level, a Recharts pie chart showing budget allocation by structure type (bridges vs roads), a ranked list of top-10 highest-priority structures with their estimated costs and recommended actions, and a budget optimization recommendation section that identifies highest-ROI maintenance targets (highest risk reduction per dollar spent).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useCityBudget.ts",
+          "frontend/src/components/BudgetByRiskChart.tsx",
+          "frontend/src/components/BudgetByTypeChart.tsx",
+          "frontend/src/components/PriorityList.tsx",
+          "frontend/src/components/BudgetOptimization.tsx",
+          "frontend/src/pages/BudgetPlanning.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/BudgetByRiskChart.tsx",
+          "frontend/src/components/BudgetByTypeChart.tsx",
+          "frontend/src/components/PriorityList.tsx",
+          "frontend/src/components/BudgetOptimization.tsx",
+          "frontend/src/pages/BudgetPlanning.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Build an Analytics & Comparison page that displays: a Recharts scatter plot of Age vs Risk Score for all structures (colored by structure type), a Recharts bar chart comparing average health scores across city areas, a distribution histogram of health scores across all structures, and an infrastructure comparison table that allows selecting 2–3 structures side-by-side to compare all their metrics, predicted maintenance years, and budget estimates.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AgeRiskScatterPlot.tsx",
+          "frontend/src/components/AreaHealthChart.tsx",
+          "frontend/src/components/HealthDistributionHistogram.tsx",
+          "frontend/src/components/InfrastructureComparison.tsx",
+          "frontend/src/pages/Analytics.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AgeRiskScatterPlot.tsx",
+          "frontend/src/components/AreaHealthChart.tsx",
+          "frontend/src/components/HealthDistributionHistogram.tsx",
+          "frontend/src/components/InfrastructureComparison.tsx",
+          "frontend/src/pages/Analytics.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Implement a real-time sensor simulation feature on the Infrastructure Detail page. Add a 'Start Sensor Simulation' toggle that, when active, simulates live sensor readings every 3 seconds by slightly randomizing the structural condition rating (±0.1–0.3 range) and traffic load (±5%) and recomputing the risk score and health score in real time on the frontend. Display a live-updating sensor readout panel with animated blinking indicator showing 'LIVE' status.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useSensorSimulation.ts",
+          "frontend/src/components/SensorSimulation.tsx",
+          "frontend/src/pages/InfrastructureDetail.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useSensorSimulation.ts",
+          "frontend/src/components/SensorSimulation.tsx",
+          "frontend/src/pages/InfrastructureDetail.tsx"
+        ]
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Create a city infrastructure overview dashboard hero section on the main landing/home page with: a large animated stat counter showing total structures monitored, a risk alert banner highlighting the count of High-risk structures requiring immediate attention, a mini heatmap thumbnail linking to the full map view, a quick-access card grid for the four main sections (Infrastructure List, City Map, Budget Planning, Analytics), and a 'System Status' indicator showing data freshness.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AnimatedCounter.tsx",
+          "frontend/src/components/RiskAlertBanner.tsx",
+          "frontend/src/components/MiniMapThumbnail.tsx",
+          "frontend/src/components/QuickAccessGrid.tsx",
+          "frontend/src/components/SystemStatus.tsx",
+          "frontend/src/components/HeroSection.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AnimatedCounter.tsx",
+          "frontend/src/components/HeroSection.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-15",
+        "summary": "Generate a city infrastructure map background illustration and a dashboard hero banner image for the application.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/HeroSection.tsx",
+          "frontend/src/components/MiniMapThumbnail.tsx",
+          "frontend/src/components/Layout.tsx",
+          "frontend/src/pages/MapView.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/HeroSection.tsx",
+          "frontend/src/components/Layout.tsx",
+          "frontend/src/pages/MapView.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Implement the civil engineering Risk Index formula entirely in Motoko: RiskScore = (AgeFactor × 0.30) + (TrafficLoadFactor × 0.25) + (MaterialFactor × 0.20) + (EnvironmentalFactor × 0.15) + (InverseConditionRating × 0.10), normalized to a 0–100 scale. Assign risk level categories: Low (0–33), Moderate (34–66), High (67–100). Compute and store riskScore and riskLevel for each infrastructure record on creation and update.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Implement a deterioration modeling and ML prediction engine in Motoko using a deterministic regression approximation (since Python microservices are not supported). The engine must: (a) compute a deterioration rate per year based on material type, environmental exposure, and traffic load; (b) predict the future condition rating at years +5, +10, +20 using linear and polynomial regression formulas encoded as pure arithmetic; (c) forecast the maintenance year — the year at which the condition rating drops below a critical threshold (rating < 3.0); (d) estimate the deterioration rate as a numeric value. Expose a query function getPredictions(id) returning futureConditionRatings, maintenanceYear, and deteriorationRate.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Implement a budget estimation module in Motoko. For each infrastructure record, compute an estimated maintenance cost based on: structureType (bridges cost more than roads), riskScore, age, and a base cost constant per structure type. Provide a getBudgetEstimate(id) query returning estimatedCost, urgencyLevel, and recommendedAction (e.g., 'Immediate Repair', 'Schedule Maintenance', 'Monitor Only'). Also provide a getCityBudgetSummary query returning total estimated budget across all structures, breakdown by risk level, and top-5 highest priority structures.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Seed the backend with a synthetic dataset of at least 20 infrastructure records (mix of bridges and roads) across 5 distinct city areas, with varied ages (5–80 years), material types (concrete, steel, asphalt, composite), traffic load factors, environmental exposure levels, and condition ratings. This simulated data must be pre-loaded into stable storage at canister initialization so the dashboard is populated on first load.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Build a React + TypeScript frontend dashboard as the main layout with a top navigation bar (app title, nav links), a left sidebar for filters, and a main content area. The overall visual theme must be a dark-mode government intelligence aesthetic inspired by Singapore Smart Nation and Siemens — deep navy/slate background, electric teal and amber accent colors, monospace data typography, card-based panels with subtle glow borders, and a data-dense professional layout. Apply this theme consistently across all views.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/components/Layout.tsx",
+          "frontend/src/components/Sidebar.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/components/Layout.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Build an Infrastructure Listing Dashboard page that fetches all infrastructure records from the backend and displays them in a sortable, filterable data table. Each row must show: name, structureType, area, age, riskScore (with colored badge: red/amber/green), riskLevel, healthScore (100 - riskScore as a percentage), maintenanceYear, and an action button to view details. Include a summary stats bar at the top showing total structures, count by risk level, and average health score.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useInfrastructure.ts",
+          "frontend/src/components/InfrastructureTable.tsx",
+          "frontend/src/components/RiskBadge.tsx",
+          "frontend/src/components/SummaryStats.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InfrastructureTable.tsx",
+          "frontend/src/components/RiskBadge.tsx",
+          "frontend/src/components/SummaryStats.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Implement a filter panel in the left sidebar that allows filtering the infrastructure list and map by: risk level (Low / Moderate / High / All), structure type (Bridge / Road / All), city area (dropdown with all 5 seeded areas + All), and maintenance urgency (Immediate / Scheduled / Monitor / All). Filters must apply in real-time to both the listing table and the heatmap simultaneously.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/contexts/FilterContext.tsx",
+          "frontend/src/components/FilterPanel.tsx",
+          "frontend/src/components/Sidebar.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/contexts/FilterContext.tsx",
+          "frontend/src/components/FilterPanel.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Build a GIS Heatmap Visualization page using Leaflet.js (react-leaflet) that renders all infrastructure structures as map markers on a city tile map. Each marker must be color-coded by risk level (red = High, orange = Moderate, green = Low). Implement a heatmap overlay layer using Leaflet.heat (leaflet.heat plugin) showing density and severity of risk zones across the city. Clicking a marker opens a popup showing the structure name, type, risk score, health score, and maintenance year.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InfrastructureMap.tsx",
+          "frontend/src/pages/MapView.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InfrastructureMap.tsx",
+          "frontend/src/pages/MapView.tsx",
+          "frontend/src/App.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/blob-storage/Mixin.mo",
+    "backend/blob-storage/Storage.mo",
+    "backend/main.mo",
+    "build-request.json",
+    "build-template/Dockerfile",
+    "build-template/LICENSE",
+    "build-template/README.md",
+    "build-template/deploy.sh",
+    "build-template/icp.yaml",
+    "build-template/package.json",
+    "build-template/pnpm-lock.yaml",
+    "build-template/pnpm-workspace.yaml",
+    "build-template/scripts/prune-unused-images.js",
+    "build-template/scripts/resize-images.js",
+    "build-template/src/backend/canister.yaml",
+    "build-template/src/backend/system-idl/aaaaa-aa.did",
+    "build-template/src/frontend/canister.yaml",
+    "build-template/src/frontend/components.json",
+    "build-template/src/frontend/env.json",
+    "build-template/src/frontend/eslint-rules/no-bigint-in-query-keys.js",
+    "build-template/src/frontend/eslint-rules/require-internet-identity-provider.js",
+    "build-template/src/frontend/eslint.config.js",
+    "build-template/src/frontend/package.json",
+    "build-template/src/frontend/postcss.config.js",
+    "build-template/src/frontend/src/components/ui/accordion.tsx",
+    "build-template/src/frontend/src/components/ui/alert-dialog.tsx",
+    "build-template/src/frontend/src/components/ui/alert.tsx",
+    "build-template/src/frontend/src/components/ui/aspect-ratio.tsx",
+    "build-template/src/frontend/src/components/ui/avatar.tsx",
+    "build-template/src/frontend/src/components/ui/badge.tsx",
+    "build-template/src/frontend/src/components/ui/breadcrumb.tsx",
+    "build-template/src/frontend/src/components/ui/button.tsx",
+    "build-template/src/frontend/src/components/ui/calendar.tsx",
+    "build-template/src/frontend/src/components/ui/card.tsx",
+    "build-template/src/frontend/src/components/ui/carousel.tsx",
+    "build-template/src/frontend/src/components/ui/chart.tsx",
+    "build-template/src/frontend/src/components/ui/checkbox.tsx",
+    "build-template/src/frontend/src/components/ui/collapsible.tsx",
+    "build-template/src/frontend/src/components/ui/command.tsx",
+    "build-template/src/frontend/src/components/ui/context-menu.tsx",
+    "build-template/src/frontend/src/components/ui/dialog.tsx",
+    "build-template/src/frontend/src/components/ui/drawer.tsx",
+    "build-template/src/frontend/src/components/ui/dropdown-menu.tsx",
+    "build-template/src/frontend/src/components/ui/form.tsx",
+    "build-template/src/frontend/src/components/ui/hover-card.tsx",
+    "build-template/src/frontend/src/components/ui/input-otp.tsx",
+    "build-template/src/frontend/src/components/ui/input.tsx",
+    "build-template/src/frontend/src/components/ui/label.tsx",
+    "build-template/src/frontend/src/components/ui/menubar.tsx",
+    "build-template/src/frontend/src/components/ui/navigation-menu.tsx",
+    "build-template/src/frontend/src/components/ui/pagination.tsx",
+    "build-template/src/frontend/src/components/ui/popover.tsx",
+    "build-template/src/frontend/src/components/ui/progress.tsx",
+    "build-template/src/frontend/src/components/ui/radio-group.tsx",
+    "build-template/src/frontend/src/components/ui/resizable.tsx",
+    "build-template/src/frontend/src/components/ui/scroll-area.tsx",
+    "build-template/src/frontend/src/components/ui/select.tsx",
+    "build-template/src/frontend/src/components/ui/separator.tsx",
+    "build-template/src/frontend/src/components/ui/sheet.tsx",
+    "build-template/src/frontend/src/components/ui/sidebar.tsx",
+    "build-template/src/frontend/src/components/ui/skeleton.tsx",
+    "build-template/src/frontend/src/components/ui/slider.tsx",
+    "build-template/src/frontend/src/components/ui/sonner.tsx",
+    "build-template/src/frontend/src/components/ui/switch.tsx",
+    "build-template/src/frontend/src/components/ui/table.tsx",
+    "build-template/src/frontend/src/components/ui/tabs.tsx",
+    "build-template/src/frontend/src/components/ui/textarea.tsx",
+    "build-template/src/frontend/src/components/ui/toggle-group.tsx",
+    "build-template/src/frontend/src/components/ui/toggle.tsx",
+    "build-template/src/frontend/src/components/ui/tooltip.tsx",
+    "build-template/src/frontend/src/hooks/use-mobile.tsx",
+    "build-template/src/frontend/src/lib/utils.ts",
+    "build-template/src/frontend/tsconfig.json",
+    "build-template/src/frontend/vite.config.js",
+    "build-template/tsconfig.json",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/public/assets/generated/app-logo-icon.dim_128x128.png",
+    "frontend/public/assets/generated/city-infrastructure-iso.dim_800x500.png",
+    "frontend/public/assets/generated/heatmap-placeholder.dim_600x400.png",
+    "frontend/public/assets/generated/hero-banner.dim_1400x400.png",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AgeRiskScatterPlot.tsx",
+    "frontend/src/components/AnimatedCounter.tsx",
+    "frontend/src/components/AreaHealthChart.tsx",
+    "frontend/src/components/BudgetByRiskChart.tsx",
+    "frontend/src/components/BudgetByTypeChart.tsx",
+    "frontend/src/components/BudgetOptimization.tsx",
+    "frontend/src/components/ConditionChart.tsx",
+    "frontend/src/components/FilterPanel.tsx",
+    "frontend/src/components/HealthDistributionHistogram.tsx",
+    "frontend/src/components/HeroSection.tsx",
+    "frontend/src/components/InfrastructureComparison.tsx",
+    "frontend/src/components/InfrastructureEditForm.tsx",
+    "frontend/src/components/InfrastructureMap.tsx",
+    "frontend/src/components/InfrastructureTable.tsx",
+    "frontend/src/components/Layout.tsx",
+    "frontend/src/components/PriorityList.tsx",
+    "frontend/src/components/RiskBadge.tsx",
+    "frontend/src/components/RiskGauge.tsx",
+    "frontend/src/components/SensorSimulation.tsx",
+    "frontend/src/components/SummaryStats.tsx",
+    "frontend/src/config.ts",
+    "frontend/src/contexts/FilterContext.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/hooks/useSensorSimulation.ts",
+    "frontend/src/index.css",
+    "frontend/src/lib/utils.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/Analytics.tsx",
+    "frontend/src/pages/BudgetPlanning.tsx",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/pages/InfrastructureDetail.tsx",
+    "frontend/src/pages/MapView.tsx",
+    "frontend/src/ui-summary.json",
+    "frontend/src/utils/StorageClient.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
